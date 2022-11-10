@@ -1,4 +1,6 @@
-﻿public class Program
+﻿namespace Battleships;
+
+public class Game
 {
     public static void Main()
     {
