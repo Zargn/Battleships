@@ -5,7 +5,7 @@ namespace Battleships.Interfaces;
 
 public interface IPlayer
 {
-    public Task InitializePlayer();
+    public Task InitializePlayer(CancellationToken cancellationToken);
 
     public Task PlayTurn();
     
