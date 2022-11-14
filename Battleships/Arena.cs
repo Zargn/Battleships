@@ -20,4 +20,9 @@ public class Arena
         tiles[x, y].Hit = true;
         return tiles[x, y].OccupiedByShip;
     }
+
+    public bool FireAtTile(FiringTarget firingTarget)
+    {
+        return FireAtTile(firingTarget.XCoordinate, firingTarget.YCoordinate);
+    }
 }
