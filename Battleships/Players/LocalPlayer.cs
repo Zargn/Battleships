@@ -16,6 +16,10 @@ public class LocalPlayer : IPlayer
 
     public Task PlayTurn()
     {
+        var firingTarget = GetFiringTarget();
+
+        var fireAtPlayerTask = FireAtOtherPlayer(firingTarget);
+        
         throw new NotImplementedException();
     }
 
@@ -25,4 +29,14 @@ public class LocalPlayer : IPlayer
     }
 
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeated;
+
+    private FiringTarget GetFiringTarget()
+    {
+        throw new NotImplementedException();
+    }
+
+    private Task FireAtOtherPlayer(FiringTarget firingTarget)
+    {
+        throw new NotImplementedException();
+    }
 }
