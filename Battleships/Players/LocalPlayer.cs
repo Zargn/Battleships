@@ -28,6 +28,11 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
+    public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)
+    {
+        throw new NotImplementedException();
+    }
+
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeated;
 
     private TargetCoordinates GetFiringTarget()
