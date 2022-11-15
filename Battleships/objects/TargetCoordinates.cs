@@ -1,6 +1,6 @@
 ﻿namespace Battleships.objects;
 
-public struct FiringTarget
+public struct TargetCoordinates
 {
     public int XCoordinate;
     public int YCoordinate;

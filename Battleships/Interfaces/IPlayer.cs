@@ -11,7 +11,7 @@ public interface IPlayer
     
     // public Task<FiringTarget> GetFiringTargetAsync();
 
-    public Task<Tile> HitTile(FiringTarget firingTarget);
+    public Task<Tile> HitTile(TargetCoordinates targetCoordinates);
 
     public event EventHandler<PlayerDefeatedEventArgs> PlayerDefeated;
 }

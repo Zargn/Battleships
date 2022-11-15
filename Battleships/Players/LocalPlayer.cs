@@ -23,19 +23,19 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public Task<Tile> HitTile(FiringTarget firingTarget)
+    public Task<Tile> HitTile(TargetCoordinates targetCoordinates)
     {
         throw new NotImplementedException();
     }
 
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeated;
 
-    private FiringTarget GetFiringTarget()
+    private TargetCoordinates GetFiringTarget()
     {
         throw new NotImplementedException();
     }
 
-    private Task FireAtOtherPlayer(FiringTarget firingTarget)
+    private Task FireAtOtherPlayer(TargetCoordinates targetCoordinates)
     {
         throw new NotImplementedException();
     }

@@ -21,8 +21,8 @@ public class Arena
         return tiles[x, y].OccupiedByShip;
     }
 
-    public bool FireAtTile(FiringTarget firingTarget)
+    public bool FireAtTile(TargetCoordinates targetCoordinates)
     {
-        return FireAtTile(firingTarget.XCoordinate, firingTarget.YCoordinate);
+        return FireAtTile(targetCoordinates.XCoordinate, targetCoordinates.YCoordinate);
     }
 }
