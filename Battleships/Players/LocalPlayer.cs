@@ -23,7 +23,7 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public Task<Tile> HitTile(TargetCoordinates targetCoordinates)
+    public Task<bool> HitTile(TargetCoordinates targetCoordinates)
     {
         throw new NotImplementedException();
     }
