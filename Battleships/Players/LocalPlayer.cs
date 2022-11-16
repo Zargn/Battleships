@@ -25,6 +25,8 @@ public class LocalPlayer : IPlayer
 
     public Task<bool> HitTile(TargetCoordinates targetCoordinates)
     {
+        return Task.FromResult(arena.FireAtTile(targetCoordinates));
+        
         throw new NotImplementedException();
     }
 
