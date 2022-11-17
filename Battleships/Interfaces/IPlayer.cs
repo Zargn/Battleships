@@ -8,7 +8,7 @@ public interface IPlayer
 {
     public Task InitializePlayer(Arena arena, CancellationToken cancellationToken);
 
-    public StartingPlayer GetPlayerStartPriority();
+    public StartingPlayer PlayerStartPriority { get; }
     
     public Task PlayTurn(CancellationToken cancellationToken);
     
