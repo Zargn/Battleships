@@ -1,6 +1,7 @@
 ﻿using Battleships.EventArguments;
 using Battleships.Interfaces;
 using Battleships.objects;
+using Battleships.objects.Enums;
 
 namespace Battleships.Players;
 
@@ -11,6 +12,11 @@ public class LocalPlayer : IPlayer
     public Task InitializePlayer(Arena arena, CancellationToken cancellationToken)
     {
         this.arena = arena;
+        throw new NotImplementedException();
+    }
+
+    public StartingPlayer GetPlayerStartPriority()
+    {
         throw new NotImplementedException();
     }
 
