@@ -36,7 +36,10 @@ public class LocalPlayer : IPlayer
     }
 
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeated;
+    public event EventHandler<ShipSunkEventArgs>? ShipSunk;
 
+    
+    
     private TargetCoordinates GetFiringTarget()
     {
         throw new NotImplementedException();
