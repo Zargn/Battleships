@@ -37,18 +37,23 @@ public class Game
 
     private IPlayer[] ConfigurePlayerOrder(IPlayer player1, IPlayer player2)
     {
-        IPlayer[] players = new IPlayer[2];
+        var players = new IPlayer[2];
 
         if (player1.PlayerStartPriority > player2.PlayerStartPriority)
         {
             players = new []{player1, player2};
-            return players;
         }
 
         if (player1.PlayerStartPriority < player2.PlayerStartPriority)
         {
             players = new []{player2, player1};
-            return players;
         }
+
+        if (player1.PlayerStartPriority == player2.PlayerStartPriority)
+        {
+            players = Random.Shared.Next(2) == 1 ? new []{player2, player1} : new []{player1, player2};
+        }
+
+        return players;
     }
 }
