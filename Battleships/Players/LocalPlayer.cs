@@ -14,7 +14,7 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public Task PlayTurn()
+    public Task PlayTurn(CancellationToken cancellationToken)
     {
         var firingTarget = GetFiringTarget();
 

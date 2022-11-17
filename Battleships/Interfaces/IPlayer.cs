@@ -7,7 +7,7 @@ public interface IPlayer
 {
     public Task InitializePlayer(Arena arena, CancellationToken cancellationToken);
 
-    public Task PlayTurn();
+    public Task PlayTurn(CancellationToken cancellationToken);
     
     // public Task<FiringTarget> GetFiringTargetAsync();
 
