@@ -39,8 +39,8 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeated;
-    public event EventHandler<ShipSunkEventArgs>? ShipSunk;
+    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
+    public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
 
     
     

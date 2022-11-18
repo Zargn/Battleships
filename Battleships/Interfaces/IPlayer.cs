@@ -18,7 +18,7 @@ public interface IPlayer
 
     public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics);
 
-    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeated;
+    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
 
-    public event EventHandler<ShipSunkEventArgs>? ShipSunk;
+    public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
 }
