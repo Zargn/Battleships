@@ -30,9 +30,23 @@ public class Game
         
     }
 
-    private Task GameLoop(IPlayer player1, IPlayer player2)
+    private async Task GameLoop(IPlayer player1, IPlayer player2)
     {
         IPlayer[] players = ConfigurePlayerOrder(player1, player2);
+
+        bool startingPlayerTurn = true;
+
+        CancellationTokenSource cancelSource = new CancellationTokenSource();
+        
+
+        while (true)
+        {
+            var turnResult = await GetIPlayer(players, startingPlayerTurn).PlayTurn(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
+            if (turnResult.TargetPlayerDefeated)
+                break;
+            
+            startingPlayerTurn = !startingPlayerTurn;
+        }
     }
 
     private IPlayer[] ConfigurePlayerOrder(IPlayer player1, IPlayer player2)
@@ -55,5 +69,10 @@ public class Game
         }
 
         return players;
+    }
+
+    private static IPlayer GetIPlayer(IPlayer[] players, bool startingPlayer)
+    {
+        return startingPlayer ? players[0] : players[1];
     }
 }
