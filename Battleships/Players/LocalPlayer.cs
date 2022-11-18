@@ -18,7 +18,7 @@ public class LocalPlayer : IPlayer
 
     public StartingPlayer PlayerStartPriority { get; }
 
-    public Task<TurnResult> PlayTurn(CancellationToken cancellationToken)
+    public Task<TurnResult> PlayTurn(IPlayer target, CancellationToken cancellationToken)
     {
         var firingTarget = GetFiringTarget();
 

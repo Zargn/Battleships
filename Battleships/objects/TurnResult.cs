@@ -2,14 +2,14 @@
 
 public class TurnResult
 {
-    public TurnResult(bool shipHit, bool shipSunk, bool playerDefeated)
+    public TurnResult(bool shipHit, bool shipSunk, bool targetPlayerDefeated)
     {
         ShipHit = shipHit;
         ShipSunk = shipSunk;
-        PlayerDefeated = playerDefeated;
+        TargetPlayerDefeated = targetPlayerDefeated;
     }
 
     public bool ShipHit { get; }
     public bool ShipSunk { get; }
-    public bool PlayerDefeated { get; }
+    public bool TargetPlayerDefeated { get; }
 }
