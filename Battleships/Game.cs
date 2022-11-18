@@ -12,6 +12,13 @@ public class Game
 
 
 
+    private IUserInput userInput;
+
+    public Game(IUserInput userInput)
+    {
+        this.userInput = userInput;
+    }
+
     public async Task Run()
     {
         // Todo in order:
@@ -23,11 +30,22 @@ public class Game
         // PlayTurn on the starting player.
         // PlayTurn on the other player.
         // Repeat last two steps until one player is defeated or something breaks.
+
+        var gameLoopTask = InitializeGame();
+        await gameLoopTask;
     }
 
     private Task InitializeGame()
     {
+        CancellationTokenSource cancelSource = new CancellationTokenSource();
         
+        var player1 = userInput.GetPlayer1();
+        player1.InitializePlayer(cancelSource.Token);
+
+        var player2 = userInput.GetPlayer2();
+        player2.InitializePlayer(cancelSource.Token);
+
+        return GameLoop(player1, player2);
     }
 
     private async Task GameLoop(IPlayer player1, IPlayer player2)
