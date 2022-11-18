@@ -10,7 +10,7 @@ public class LocalPlayer : IPlayer
     private Arena arena;
     private StartingPlayer playerStartPriority;
 
-    public Task InitializePlayer(Arena arena, CancellationToken cancellationToken)
+    public Task InitializePlayer(CancellationToken cancellationToken)
     {
         this.arena = arena;
         throw new NotImplementedException();
