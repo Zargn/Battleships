@@ -20,7 +20,8 @@ public struct TargetCoordinates
         new TargetCoordinates(a.X + b.X, a.Y + b.Y);
     public static TargetCoordinates operator -(TargetCoordinates a, TargetCoordinates b) =>
         new TargetCoordinates(a.X - b.X, a.Y - b.Y);
-    
     public static TargetCoordinates operator *(TargetCoordinates a, int i) =>
         new TargetCoordinates(a.X * i, a.Y * i);
+    public static bool operator ==(TargetCoordinates a, TargetCoordinates b) => a.X == b.X && a.Y == b.Y;
+    public static bool operator !=(TargetCoordinates a, TargetCoordinates b) => !(a == b);
 }
