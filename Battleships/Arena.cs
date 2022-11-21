@@ -37,7 +37,7 @@ public class Arena
     /// <summary>
     /// Attempt to place the provided ship at the provided coordinates and direction.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Full Tile array for user review.</returns>
     /// <exception cref="LocationUnavailableException">Location provided does not have enough space for provided ship.</exception>
     public Tile[,] PlaceShip(Ship ship, TargetCoordinates targetCoordinates, TargetCoordinates direction)
     {
@@ -106,7 +106,12 @@ public class Arena
         }
     }
     
-    // Fires at the target x and y coordinates.
+    /// <summary>
+    /// Fires at the selected coordinates and updates ships hit.
+    /// </summary>
+    /// <param name="targetCoordinates"></param>
+    /// <returns>HitResult containing if a ship was hit and in that case which ship.</returns>
+    /// <exception cref="LocationUnavailableException">If the provided target was invalid.</exception>
     public HitResult FireAtTile(TargetCoordinates targetCoordinates)
     {
         if (!IsInArray(targetCoordinates))
@@ -121,15 +126,13 @@ public class Arena
         outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
         this[targetCoordinates] = tile;
 
-        if (tile.OccupiedByShip)
-        {
-            outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = true;
-            var ship = GetShipAtCoordinates(targetCoordinates);
-            ship.Health--;
-            return new HitResult(true, ship);
-        }
+        if (!tile.OccupiedByShip) return new HitResult(false, null);
         
-        return new HitResult(false, null);
+        outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = true;
+        var ship = GetShipAtCoordinates(targetCoordinates);
+        ship.Health--;
+        return new HitResult(true, ship);
+
     }
 
     private Ship? GetShipAtCoordinates(TargetCoordinates targetCoordinates)
