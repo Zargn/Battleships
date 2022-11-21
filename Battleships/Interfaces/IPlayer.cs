@@ -10,7 +10,9 @@ public interface IPlayer
 
     public StartingPlayer PlayerStartPriority { get; }
     
-    public Task<TurnResult> PlayTurn(IPlayer target, CancellationToken cancellationToken);
+    public Tile[,] KnownArenaTiles { get; }
+    
+    public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken);
     
     // public Task<FiringTarget> GetFiringTargetAsync();
 

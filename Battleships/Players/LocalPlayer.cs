@@ -18,7 +18,9 @@ public class LocalPlayer : IPlayer
 
     public StartingPlayer PlayerStartPriority { get; }
 
-    public Task<TurnResult> PlayTurn(IPlayer target, CancellationToken cancellationToken)
+    public Tile[,] KnownArenaTiles => arena.CurrentView;
+
+    public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
         var firingTarget = GetFiringTarget();
 
