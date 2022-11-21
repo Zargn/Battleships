@@ -47,8 +47,15 @@ public class Arena
 
     private bool IsInArray(TargetCoordinates c)
     {
-        return (0 <= c.X && c.X < XSize && 0 <= c.Y && c.Y < YSize);
+        return c.X >= 0 && c.X < XSize && c.Y >= 0 && c.Y < YSize;
     }
+    
+    private bool IsInArray(int x, int y)
+    {
+        return x >= 0 && x < XSize && y >= 0 && y < YSize;
+    }
+    
+    
 
     private bool SurroundingAreaContainsShips(int length, TargetCoordinates startCoordinates, TargetCoordinates direction)
     {
