@@ -29,7 +29,7 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public Task<bool> HitTile(TargetCoordinates targetCoordinates)
+    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates)
     {
         return Task.FromResult(arena.FireAtTile(targetCoordinates));
         
