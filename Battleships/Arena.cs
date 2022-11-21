@@ -15,6 +15,8 @@ public class Arena
 
     public Tile[,] CurrentView => outsideViewTiles;
 
+    private List<Ship> ships = new();
+
     public Arena(int xSize, int ySize)
     {
         tiles = new Tile[xSize, ySize];
@@ -35,12 +37,10 @@ public class Arena
 
         if (!SurroundingAreaContainsShips(ship.Length, targetCoordinates, direction))
             throw new LocationUnavailableException("Selected location had ships in too close proximity.");
-        
-        
-        
-        var sideDir = new TargetCoordinates(direction.Y, direction.X);
-        
-        
+
+        SetShipTilesAndCoordinates(ship, targetCoordinates, direction);
+
+        ships.Add(ship);
         
         return tiles;
     }
@@ -74,6 +74,17 @@ public class Arena
         }
 
         return true;
+    }
+
+    private void SetShipTilesAndCoordinates(Ship ship, TargetCoordinates startCoordinates, TargetCoordinates direction)
+    {
+        var setCoordinate = startCoordinates;
+        for (var i = 0; i < ship.Length; i++)
+        {
+            tiles[setCoordinate.X, setCoordinate.Y].OccupiedByShip = true;
+            ship.CoordinatesArray[i] = setCoordinate;
+            setCoordinate += direction;
+        }
     }
     
     // Fires at the target x and y coordinates.
