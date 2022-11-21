@@ -113,6 +113,10 @@ public class Arena
             throw new LocationUnavailableException("Provided coordinates was outside the map.");
 
         var tile = this[targetCoordinates];
+
+        if (tile.Hit)
+            throw new LocationUnavailableException("Provided coordinates has been hit already!");
+        
         tile.Hit = true;
         outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
         this[targetCoordinates] = tile;
