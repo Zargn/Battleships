@@ -1,4 +1,5 @@
-﻿using Battleships.Interfaces;
+﻿using System.Numerics;
+using Battleships.Interfaces;
 
 namespace Battleships;
 
@@ -12,11 +13,11 @@ public class Game
 
 
 
-    private IUserInput userInput;
+    private IUserInterface userInterface;
 
-    public Game(IUserInput userInput)
+    public Game(IUserInterface userInterface)
     {
-        this.userInput = userInput;
+        this.userInterface = userInterface;
     }
 
     public async Task Run()
@@ -39,10 +40,10 @@ public class Game
     {
         CancellationTokenSource cancelSource = new CancellationTokenSource();
         
-        var player1 = userInput.GetPlayer1();
+        var player1 = userInterface.GetPlayer1();
         player1.InitializePlayer(cancelSource.Token);
 
-        var player2 = userInput.GetPlayer2();
+        var player2 = userInterface.GetPlayer2();
         player2.InitializePlayer(cancelSource.Token);
 
         return GameLoop(player1, player2);
@@ -59,7 +60,8 @@ public class Game
 
         while (true)
         {
-            var turnResult = await GetIPlayer(players, startingPlayerTurn).PlayTurn(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
+            var turnResult = await GetIPlayer(players, startingPlayerTurn).PlayTurnAsync(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
+            
             if (turnResult.TargetPlayerDefeated)
                 break;
             
