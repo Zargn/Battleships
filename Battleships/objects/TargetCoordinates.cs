@@ -2,17 +2,22 @@
 
 public struct TargetCoordinates
 {
-    public int XCoordinate;
-    public int YCoordinate;
+    public int X;
+    public int Y;
 
-    public TargetCoordinates(int xCoordinate, int yCoordinate)
+    public TargetCoordinates(int x, int y)
     {
-        XCoordinate = xCoordinate;
-        YCoordinate = yCoordinate;
+        X = x;
+        Y = y;
     }
 
     public static TargetCoordinates North => new TargetCoordinates(0, 1);
     public static TargetCoordinates East => new TargetCoordinates(1, 0);
     public static TargetCoordinates South => new TargetCoordinates(0, -1);
     public static TargetCoordinates West => new TargetCoordinates(-1, 0);
+
+    public static TargetCoordinates operator +(TargetCoordinates a, TargetCoordinates b) =>
+        new TargetCoordinates(a.X + b.X, a.Y + b.Y);
+    public static TargetCoordinates operator -(TargetCoordinates a, TargetCoordinates b) =>
+        new TargetCoordinates(a.X - b.X, a.Y - b.Y);
 }
