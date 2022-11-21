@@ -15,5 +15,6 @@ public class Ship
     public string Name { get; }
     public string Type { get; }
     public int Health { get; set; }
+    public bool ShipSunk => Health <= 0;
     public TargetCoordinates[] CoordinatesArray { get; }
 }
