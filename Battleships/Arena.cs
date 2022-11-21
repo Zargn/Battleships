@@ -1,7 +1,7 @@
-﻿using System.Numerics;
-using System.Xml.Xsl;
-using Battleships.objects;
+﻿using Battleships.objects;
 using Battleships.objects.Exceptions;
+
+
 
 namespace Battleships;
 
@@ -20,6 +20,18 @@ public class Arena
     public Arena(int xSize, int ySize)
     {
         tiles = new Tile[xSize, ySize];
+    }
+
+    public Tile this[TargetCoordinates targetCoordinates]
+    {
+        get
+        {
+            return tiles[targetCoordinates.X, targetCoordinates.Y];
+        } 
+        set
+        {
+            tiles[targetCoordinates.X, targetCoordinates.Y] = value;
+        }
     }
 
     /// <summary>
@@ -95,18 +107,34 @@ public class Arena
     }
     
     // Fires at the target x and y coordinates.
-    public bool FireAtTile(int x, int y)
+    public HitResult FireAtTile(TargetCoordinates targetCoordinates)
     {
-        tiles[x, y].Hit = true;
-        outsideViewTiles[x, y].Hit = true;
-        if (tiles[x, y].OccupiedByShip)
-            outsideViewTiles[x, y].OccupiedByShip = true;
+        if (!IsInArray(targetCoordinates))
+            throw new LocationUnavailableException("Provided coordinates was outside the map.");
+
+        var tile = this[targetCoordinates];
+        tile.Hit = true;
+        outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
+        this[targetCoordinates] = tile;
+
+        if (tile.OccupiedByShip)
+        {
+            outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = true;
+            var ship = GetShipAtCoordinates(targetCoordinates);
+            ship.Health--;
+            return new HitResult(true, ship);
+        }
         
-        return tiles[x, y].OccupiedByShip;
+        return new HitResult(false, null);
     }
 
-    public bool FireAtTile(TargetCoordinates targetCoordinates)
+    private Ship? GetShipAtCoordinates(TargetCoordinates targetCoordinates)
     {
-        return FireAtTile(targetCoordinates.X, targetCoordinates.Y);
+        foreach (var ship in from ship in ships from shipCoordinate in ship.CoordinatesArray where targetCoordinates == shipCoordinate select ship)
+        {
+            return ship;
+        }
+
+        throw new Exception("A ship with the hit coordinates was not found.");
     }
 }
