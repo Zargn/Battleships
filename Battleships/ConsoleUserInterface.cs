@@ -19,9 +19,11 @@ public class ConsoleUserInterface : IUserInterface
 
     public void DrawTiles(Tile[,] tiles)
     {
+        Console.WriteLine();
+        
         StringBuilder sb = new StringBuilder();
         
-        for (int y = 0; y < tiles.GetLength(1); y++)
+        for (int y = tiles.GetLength(1) - 1; y >= 0; y--)
         {
             sb.Append("| ");
             
@@ -34,6 +36,7 @@ public class ConsoleUserInterface : IUserInterface
                     symbol = '#';
 
                 sb.Append($"{symbol} ");
+                // sb.Append($"{x}{y} ");
             }
 
             sb.Append("|");
