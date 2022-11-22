@@ -27,7 +27,7 @@ public class LocalPlayer : IPlayer
         }
         else
         {
-            
+            PlaceShipsAuto(shipLengths, cancellationToken);
         }
         
         this.arena = arena;
@@ -38,9 +38,9 @@ public class LocalPlayer : IPlayer
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            for (int i = 0; i < shipLengths.Length; i++)
+            foreach (var i in shipLengths)
             {
-                PlaceShip(shipLengths[i], cancellationToken);
+                PlaceShip(i, cancellationToken);
             }
         }
     }
@@ -61,6 +61,18 @@ public class LocalPlayer : IPlayer
             {
                 userInterface.DisplayError("Selected location was unavailable.");
             }
+        }
+    }
+
+    private void PlaceShipsAuto(int[] shipLengths, CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            // Todo: Call arena autoPlaceShips here.
+            
+            userInterface.DrawTiles();
+            if (!userInterface.GetYesNoAnswer("Randomise again?"))
+                return;
         }
     }
 
