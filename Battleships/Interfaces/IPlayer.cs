@@ -9,6 +9,7 @@ public interface IPlayer
     public Task InitializePlayer(CancellationToken cancellationToken);
 
     public StartingPlayer PlayerStartPriority { get; }
+    public string UserName { get; }
     
     public Tile[,] KnownArenaTiles { get; }
     

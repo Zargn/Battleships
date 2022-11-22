@@ -12,11 +12,14 @@ public class LocalPlayer : IPlayer
 
     public Task InitializePlayer(CancellationToken cancellationToken)
     {
+        
+        
         this.arena = arena;
         throw new NotImplementedException();
     }
 
-    public StartingPlayer PlayerStartPriority { get; }
+    public StartingPlayer PlayerStartPriority { get; private set; }
+    public string UserName { get; private set; }
 
     public Tile[,] KnownArenaTiles => arena.CurrentView;
 
