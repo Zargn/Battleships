@@ -14,5 +14,5 @@ public interface IUserInterface
 
     public bool GetYesNoAnswer(string question);
 
-    public ShipPlacementInformation GetShipPlacementInformation();
+    public ShipPlacementInformation GetShipPlacementInformation(int shipLength);
 }
