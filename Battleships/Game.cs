@@ -8,7 +8,7 @@ public class Game
 {
     public static async Task Main()
     {
-        var game = new Game();
+        var game = new Game(new ConsoleUserInterface());
         await game.Run();
     }
 
