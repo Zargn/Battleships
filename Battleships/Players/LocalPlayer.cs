@@ -2,6 +2,7 @@
 using Battleships.Interfaces;
 using Battleships.objects;
 using Battleships.objects.Enums;
+using Battleships.objects.Exceptions;
 
 namespace Battleships.Players;
 
@@ -22,7 +23,7 @@ public class LocalPlayer : IPlayer
 
         if (userInterface.GetYesNoAnswer("Do you want to place your ships manually?"))
         {
-            PlaceShipsManual();
+            PlaceShipsManual(shipLengths, cancellationToken);
         }
         else
         {
@@ -39,16 +40,27 @@ public class LocalPlayer : IPlayer
         {
             for (int i = 0; i < shipLengths.Length; i++)
             {
-                TryPlaceShip(shipLengths[i], cancellationToken);
+                PlaceShip(shipLengths[i], cancellationToken);
             }
         }
     }
 
-    private bool TryPlaceShip(int shipLength, CancellationToken cancellationToken)
+    private void PlaceShip(int shipLength, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var target = userInterface.GetShipPlacementInformation(shipLength);
+            var placementInformation = userInterface.GetShipPlacementInformation(shipLength);
+            var ship = new Ship(shipLength, placementInformation.Name);
+            try
+            {
+                var tiles = arena.PlaceShip(ship, placementInformation.Coordinates, placementInformation.Direction);
+                userInterface.DrawTiles(tiles);
+                return;
+            }
+            catch (LocationUnavailableException)
+            {
+                userInterface.DisplayError("Selected location was unavailable.");
+            }
         }
     }
 
