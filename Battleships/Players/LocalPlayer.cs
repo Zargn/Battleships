@@ -33,17 +33,23 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    private void PlaceShipsManual()
+    private void PlaceShipsManual(int[] shipLengths, CancellationToken cancellationToken)
     {
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            for (int i = 0; )
+            for (int i = 0; i < shipLengths.Length; i++)
+            {
+                TryPlaceShip(shipLengths[i], cancellationToken);
+            }
         }
     }
 
-    private bool TryPlaceShip(ShipPlacementInformation)
+    private bool TryPlaceShip(int shipLength, CancellationToken cancellationToken)
     {
-        
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var target = userInterface.GetShipPlacementInformation(shipLength);
+        }
     }
 
     public StartingPlayer PlayerStartPriority { get; private set; }
