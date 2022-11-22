@@ -24,14 +24,8 @@ public class Arena
 
     public Tile this[TargetCoordinates targetCoordinates]
     {
-        get
-        {
-            return tiles[targetCoordinates.X, targetCoordinates.Y];
-        } 
-        set
-        {
-            tiles[targetCoordinates.X, targetCoordinates.Y] = value;
-        }
+        get => tiles[targetCoordinates.X, targetCoordinates.Y];
+        set => tiles[targetCoordinates.X, targetCoordinates.Y] = value;
     }
 
     /// <summary>
@@ -61,24 +55,17 @@ public class Arena
     {
         return c.X >= 0 && c.X < XSize && c.Y >= 0 && c.Y < YSize;
     }
-    
-    private bool IsInArray(int x, int y)
-    {
-        return x >= 0 && x < XSize && y >= 0 && y < YSize;
-    }
-    
-    
 
     private bool SurroundingAreaContainsShips(int length, TargetCoordinates startCoordinates, TargetCoordinates direction)
     {
         // This might seem weird since it will not give the same side of the direction, but it doesn't really matter in this case.
-        TargetCoordinates sideDirection = new TargetCoordinates(direction.Y, direction.X);
+        var sideDirection = new TargetCoordinates(direction.Y, direction.X);
 
-        TargetCoordinates searchCords = startCoordinates - direction - sideDirection;
+        var searchCords = startCoordinates - direction - sideDirection;
 
-        for (int shortSide = 0; shortSide < 3; shortSide++)
+        for (var shortSide = 0; shortSide < 3; shortSide++)
         {
-            for (int longSide = 0; longSide < length + 2; longSide++)
+            for (var longSide = 0; longSide < length + 2; longSide++)
             {
                 if (IsInArray(searchCords))
                 {
