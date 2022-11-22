@@ -9,13 +9,41 @@ public class LocalPlayer : IPlayer
 {
     private Arena arena;
     private StartingPlayer playerStartPriority;
+    private IUserInterface userInterface;
 
-    public Task InitializePlayer(CancellationToken cancellationToken)
+    public LocalPlayer(IUserInterface userInterface)
     {
-        
+        this.userInterface = userInterface;
+    }
+
+    public Task InitializePlayer(int[] shipLengths, CancellationToken cancellationToken)
+    {
+        UserName = userInterface.GetUsername();
+
+        if (userInterface.GetYesNoAnswer("Do you want to place your ships manually?"))
+        {
+            PlaceShipsManual();
+        }
+        else
+        {
+            
+        }
         
         this.arena = arena;
         throw new NotImplementedException();
+    }
+
+    private void PlaceShipsManual()
+    {
+        while (true)
+        {
+            for (int i = 0; )
+        }
+    }
+
+    private bool TryPlaceShip(ShipPlacementInformation)
+    {
+        
     }
 
     public StartingPlayer PlayerStartPriority { get; private set; }

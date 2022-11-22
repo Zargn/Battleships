@@ -6,7 +6,7 @@ namespace Battleships.Interfaces;
 
 public interface IPlayer
 {
-    public Task InitializePlayer(CancellationToken cancellationToken);
+    public Task InitializePlayer(int[] shipLengths, CancellationToken cancellationToken);
 
     public StartingPlayer PlayerStartPriority { get; }
     public string UserName { get; }
