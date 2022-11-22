@@ -1,12 +1,14 @@
-﻿namespace Battleships.objects;
+﻿using Battleships.objects.Enums;
+
+namespace Battleships.objects;
 
 public class Ship
 {
-    public Ship(int length, string name, string type)
+    public Ship(int length, string name)
     {
         Length = length;
         Name = name;
-        Type = type;
+        Type = ((ShipType) length).ToString();
         Health = length;
         CoordinatesArray = new TargetCoordinates[length];
     }
