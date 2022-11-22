@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Battleships.Interfaces;
+using Battleships.objects.Enums;
 
 namespace Battleships;
 
@@ -11,7 +12,9 @@ public class Game
         await game.Run();
     }
 
-
+    private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
+    private const int ArenaSizeX = 10;
+    private const int ArenaSizeY = 10;
 
     private IUserInterface userInterface;
 
@@ -41,10 +44,10 @@ public class Game
         CancellationTokenSource cancelSource = new CancellationTokenSource();
         
         var player1 = userInterface.GetPlayer1();
-        player1.InitializePlayer(cancelSource.Token);
+        player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
 
         var player2 = userInterface.GetPlayer2();
-        player2.InitializePlayer(cancelSource.Token);
+        player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
 
         return GameLoop(player1, player2);
     }
