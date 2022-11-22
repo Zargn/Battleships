@@ -98,7 +98,7 @@ public class Arena
         if (!IsInArray(targetCoordinates + direction*ship.Length))
             throw new LocationUnavailableException("Provided direction and ship size resulted in ship being unable to fit inside the map.");
 
-        if (!SurroundingAreaContainsShips(ship.Length, targetCoordinates, direction))
+        if (SurroundingAreaContainsShips(ship.Length, targetCoordinates, direction))
             throw new LocationUnavailableException("Selected location had ships in too close proximity.");
 
         SetShipTilesAndCoordinates(ship, targetCoordinates, direction);
@@ -118,25 +118,26 @@ public class Arena
         // This might seem weird since it will not give the same side of the direction, but it doesn't really matter in this case.
         var sideDirection = new TargetCoordinates(direction.Y, direction.X);
 
-        var searchCords = startCoordinates - direction - sideDirection;
+        var startSearchCords = startCoordinates - direction - sideDirection;
 
         for (var shortSide = 0; shortSide < 3; shortSide++)
         {
+            var searchCoords = startSearchCords;
             for (var longSide = 0; longSide < length + 2; longSide++)
             {
-                if (IsInArray(searchCords))
+                if (IsInArray(searchCoords))
                 {
-                    if (tiles[searchCords.X, searchCords.Y].OccupiedByShip)
-                        return false;
+                    if (tiles[searchCoords.X, searchCoords.Y].OccupiedByShip)
+                        return true;
                 }
 
-                searchCords += direction;
+                searchCoords += direction;
             }
 
-            searchCords += sideDirection;
+            startSearchCords += sideDirection;
         }
 
-        return true;
+        return false;
     }
 
     private void SetShipTilesAndCoordinates(Ship ship, TargetCoordinates startCoordinates, TargetCoordinates direction)
