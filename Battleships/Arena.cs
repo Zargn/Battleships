@@ -28,6 +28,63 @@ public class Arena
         set => tiles[targetCoordinates.X, targetCoordinates.Y] = value;
     }
 
+    public Tile[,] RandomiseShipLocations(int[] shipLengths)
+    {
+        foreach (var shipLength in shipLengths)
+        {
+            var ship = new Ship(shipLength, "Ai");
+
+            FindLocationAndPlaceShip(ship);
+        }
+
+        return tiles;
+    }
+
+    private void FindLocationAndPlaceShip(Ship ship)
+    {
+        while (true)
+        {
+            var targetCoordinates = GetRandomTargetCoordinates();
+
+            if (AttemptAutoPlaceShip(ship, targetCoordinates))
+            {
+                return;
+            }
+        }
+    }
+
+    private TargetCoordinates GetRandomTargetCoordinates()
+    {
+        while (true)
+        {
+            var x = Random.Shared.Next(XSize);
+            var y = Random.Shared.Next(YSize);
+
+            if (!tiles[x, y].OccupiedByShip)
+                return new TargetCoordinates(x, y);
+        }
+    }
+
+    private bool AttemptAutoPlaceShip(Ship ship, TargetCoordinates targetCoordinates)
+    {
+        var startDirectionIndex = Random.Shared.Next(4);
+        var directions = TargetCoordinates.Directions;
+
+        for (int i = 0; i < 4; i++)
+        {
+            try
+            {
+                PlaceShip(ship, targetCoordinates, directions[startDirectionIndex]);
+                return true;
+            }
+            catch (LocationUnavailableException)
+            {
+            }
+        }
+
+        return false;
+    }
+    
     /// <summary>
     /// Attempt to place the provided ship at the provided coordinates and direction.
     /// </summary>
