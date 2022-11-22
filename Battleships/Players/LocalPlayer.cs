@@ -17,25 +17,27 @@ public class LocalPlayer : IPlayer
         this.userInterface = userInterface;
     }
 
-    public Task InitializePlayer(int[] shipLengths, CancellationToken cancellationToken)
+    public Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         UserName = userInterface.GetUsername();
 
         if (userInterface.GetYesNoAnswer("Do you want to place your ships manually?"))
         {
-            PlaceShipsManual(shipLengths, cancellationToken);
+            PlaceShipsManual(shipLengths, xSize, ySize, cancellationToken);
         }
         else
         {
-            PlaceShipsAuto(shipLengths, cancellationToken);
+            PlaceShipsAuto(shipLengths, xSize, ySize, cancellationToken);
         }
         
         this.arena = arena;
         throw new NotImplementedException();
     }
 
-    private void PlaceShipsManual(int[] shipLengths, CancellationToken cancellationToken)
+    private void PlaceShipsManual(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
+        arena = new Arena(xSize, ySize);
+        
         while (!cancellationToken.IsCancellationRequested)
         {
             foreach (var i in shipLengths)
@@ -64,13 +66,14 @@ public class LocalPlayer : IPlayer
         }
     }
 
-    private void PlaceShipsAuto(int[] shipLengths, CancellationToken cancellationToken)
+    private void PlaceShipsAuto(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            // Todo: Call arena autoPlaceShips here.
+            arena = new Arena(xSize, ySize);
+            var tiles = arena.RandomiseShipLocations(shipLengths);
             
-            userInterface.DrawTiles();
+            userInterface.DrawTiles(tiles);
             if (!userInterface.GetYesNoAnswer("Randomise again?"))
                 return;
         }
