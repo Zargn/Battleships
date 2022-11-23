@@ -75,11 +75,30 @@ public class ConsoleUserInterface : IUserInterface
 
     public ShipPlacementInformation GetShipPlacementInformation(int shipLength)
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"Please enter location for ship of length: {shipLength}");
+        var coordinates = GetTargetCoordinates();
+
+        Console.WriteLine($"Please enter direction: ");
     }
 
     public void DisplayError(string message)
     {
         throw new NotImplementedException();
+    }
+
+    private TargetCoordinates GetTargetCoordinates()
+    {
+        Console.WriteLine("Please enter target coordinates: (Xvalue Yvalue)");
+        while (true)
+        {
+            try
+            {
+                return TargetCoordinates.FromString(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Input was in wrong format. Please enter coordinates in the following format: (Xvalue Yvalue)");
+            }
+        }
     }
 }
