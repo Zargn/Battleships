@@ -89,7 +89,7 @@ public class ConsoleUserInterface : IUserInterface
 
     public void DisplayError(string message)
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"Error: {message}");
     }
 
     private TargetCoordinates GetTargetCoordinates()
