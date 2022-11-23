@@ -30,4 +30,41 @@ public struct TargetCoordinates
     {
         return $"(x: {X}, y: {Y})";
     }
+
+    /// <summary>
+    /// Get a TargetCoordinates from the supplied string. String should be in format: "number number"
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    /// <exception cref="FormatException"></exception>
+    public static TargetCoordinates FromString(string s)
+    {
+        if (s == null)
+            throw new FormatException();
+        
+        string? xString = null;
+        string? yString = null;
+
+        var startIndex = 0;
+        
+        // No need to check the first letter for a space since in a valid input the first letter will always be a number.
+        for (var i = 1; i < s.Length; i++)
+        {
+            if (s[i] == ' ' && xString == null)
+            {
+                xString = s.Substring(startIndex, i);
+                startIndex = i + 1;
+            }
+        }
+
+        yString = s.Substring(startIndex, s.Length - startIndex);
+
+        if (xString == null)
+            throw new FormatException();
+
+        var x = int.Parse(xString);
+        var y = int.Parse(yString);
+
+        return new TargetCoordinates(x, y);
+    }
 }
