@@ -17,7 +17,7 @@ public class LocalPlayer : IPlayer
         this.userInterface = userInterface;
     }
 
-    public Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
+    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         UserName = userInterface.GetUsername();
 
@@ -29,14 +29,12 @@ public class LocalPlayer : IPlayer
         {
             PlaceShipsAuto(shipLengths, xSize, ySize, cancellationToken);
         }
-        
-        this.arena = arena;
-        throw new NotImplementedException();
     }
 
     private void PlaceShipsManual(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         arena = new Arena(xSize, ySize);
+        userInterface.DrawTiles(arena.CurrentView);
         
         while (!cancellationToken.IsCancellationRequested)
         {
