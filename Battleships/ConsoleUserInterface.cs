@@ -98,6 +98,11 @@ public class ConsoleUserInterface : IUserInterface
         Console.WriteLine($"Error: {message}");
     }
 
+    public void DisplayMessage(string message)
+    {
+        Console.WriteLine(message);
+    }
+
     // TODO: Add string message argument?
     public TargetCoordinates GetTargetCoordinates()
     {
