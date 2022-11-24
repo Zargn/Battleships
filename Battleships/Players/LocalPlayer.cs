@@ -12,10 +12,22 @@ public class LocalPlayer : IPlayer
     private StartingPlayer playerStartPriority;
     private IUserInterface userInterface;
 
+    
+    
+    public StartingPlayer PlayerStartPriority { get; private set; }
+    public string UserName { get; private set; }
+
+    public Tile[,] KnownArenaTiles => arena.CurrentView;
+    public int ShipsLeft { get; }
+
+    
+    
     public LocalPlayer(IUserInterface userInterface)
     {
         this.userInterface = userInterface;
     }
+    
+    
 
     public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
@@ -76,11 +88,8 @@ public class LocalPlayer : IPlayer
                 return;
         }
     }
-
-    public StartingPlayer PlayerStartPriority { get; private set; }
-    public string UserName { get; private set; }
-
-    public Tile[,] KnownArenaTiles => arena.CurrentView;
+    
+    
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
@@ -88,27 +97,10 @@ public class LocalPlayer : IPlayer
 
         var hitResult = await FireAtOtherPlayer(firingTarget, target, cancellationToken);
 
-        var turnResult = GetTurnResult(hitResult);
+        var turnResult = GetTurnResult(hitResult, target);
 
         return turnResult;
     }
-
-    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates)
-    {
-        return Task.FromResult(arena.FireAtTile(targetCoordinates));
-        
-        throw new NotImplementedException();
-    }
-
-    public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)
-    {
-        throw new NotImplementedException();
-    }
-
-    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
-    public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
-
-    
     
     private TargetCoordinates GetFiringTarget(Tile[,] enemyTiles, CancellationToken cancellationToken)
     {
@@ -142,7 +134,28 @@ public class LocalPlayer : IPlayer
     {
         // TODO: Does this work?
         var shipSunk = hitResult.Ship?.Health <= 0;
-        
-        return new TurnResult(hitResult.shipHit, shipSunk )
+
+        return new TurnResult(hitResult.shipHit, shipSunk, target.PlayerDefeated);
     }
+    
+    
+
+    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates)
+    {
+        return Task.FromResult(arena.FireAtTile(targetCoordinates));
+        
+        throw new NotImplementedException();
+    }
+
+    public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)
+    {
+        throw new NotImplementedException();
+    }
+
+    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
+    public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
+
+    
+    
+
 }
