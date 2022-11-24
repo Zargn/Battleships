@@ -12,9 +12,9 @@ public class LocalPlayer : IPlayer
     private StartingPlayer playerStartPriority;
     private IUserInterface userInterface;
 
-    
-    
-    public StartingPlayer PlayerStartPriority { get; private set; }
+
+
+    public StartingPlayer PlayerStartPriority => StartingPlayer.Yes;
     public string UserName { get; private set; }
 
     public Tile[,] KnownArenaTiles => arena.CurrentView;
@@ -109,6 +109,15 @@ public class LocalPlayer : IPlayer
 
         var turnResult = GetTurnResult(hitResult, target);
 
+        if (turnResult.ShipHitDEPRECATED)
+            Console.WriteLine("Ship hit!");
+        if (turnResult.ShipSunkDEPRECATED)
+            Console.WriteLine("Ship sunk!");
+        if (turnResult.TargetPlayerDefeated)
+            Console.WriteLine("Player defeated!");
+
+        userInterface.DrawTiles(target.KnownArenaTiles);
+        
         return turnResult;
     }
     
