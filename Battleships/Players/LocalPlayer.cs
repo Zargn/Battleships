@@ -18,7 +18,7 @@ public class LocalPlayer : IPlayer
     public string UserName { get; private set; }
 
     public Tile[,] KnownArenaTiles => arena.CurrentView;
-    public int ShipsLeft { get; }
+    public int ShipsLeft { get; set; }
 
     
     
@@ -41,6 +41,14 @@ public class LocalPlayer : IPlayer
         {
             PlaceShipsAuto(shipLengths, xSize, ySize, cancellationToken);
         }
+
+        ShipsLeft = shipLengths.Length;
+        arena.ShipSunk += HandleShipSunkEvent;
+    }
+
+    private void HandleShipSunkEvent(object? o, EventArgs e)
+    {
+        ShipsLeft--;
     }
 
     private void PlaceShipsManual(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
@@ -93,6 +101,8 @@ public class LocalPlayer : IPlayer
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
+        userInterface.DrawTiles(target.KnownArenaTiles);
+        
         var firingTarget = GetFiringTarget(target.KnownArenaTiles, cancellationToken);
 
         var hitResult = await FireAtOtherPlayer(firingTarget, target, cancellationToken);
