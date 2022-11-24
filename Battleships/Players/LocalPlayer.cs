@@ -144,16 +144,16 @@ public class LocalPlayer : IPlayer
     {
         return Task.FromResult(arena.FireAtTile(targetCoordinates));
     }
+    
+    
 
     public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)
     {
         throw new NotImplementedException();
     }
+    
+    
 
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
     public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
-
-    
-    
-
 }
