@@ -110,11 +110,11 @@ public class LocalPlayer : IPlayer
         var turnResult = GetTurnResult(hitResult, target);
 
         if (turnResult.ShipHitDEPRECATED)
-            Console.WriteLine("Ship hit!");
+            userInterface.DisplayMessage("Ship hit!");
         if (turnResult.ShipSunkDEPRECATED)
-            Console.WriteLine("Ship sunk!");
+            userInterface.DisplayMessage("Ship sunk!");
         if (turnResult.TargetPlayerDefeated)
-            Console.WriteLine("Player defeated!");
+            userInterface.DisplayMessage("Player defeated!");
 
         userInterface.DrawTiles(target.KnownArenaTiles);
         
