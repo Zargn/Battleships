@@ -82,13 +82,15 @@ public class LocalPlayer : IPlayer
 
     public Tile[,] KnownArenaTiles => arena.CurrentView;
 
-    public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
+    public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        var firingTarget = GetFiringTarget();
+        var firingTarget = GetFiringTarget(target.KnownArenaTiles, cancellationToken);
 
-        var fireAtPlayerTask = FireAtOtherPlayer(firingTarget);
-        
-        throw new NotImplementedException();
+        var hitResult = await FireAtOtherPlayer(firingTarget, target, cancellationToken);
+
+        var turnResult = GetTurnResult(hitResult);
+
+        return turnResult;
     }
 
     public Task<HitResult> HitTile(TargetCoordinates targetCoordinates)
@@ -108,13 +110,39 @@ public class LocalPlayer : IPlayer
 
     
     
-    private TargetCoordinates GetFiringTarget()
+    private TargetCoordinates GetFiringTarget(Tile[,] enemyTiles, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var target = userInterface.GetTargetCoordinates();
+            if (enemyTiles.GetLength(0) <= target.X || enemyTiles.GetLength(1) <= target.Y)
+            {
+                userInterface.DisplayError("Target was out of bounds. Try again.");
+                continue;
+            }
+
+            if (enemyTiles[target.X, target.Y].Hit)
+            {
+                userInterface.DisplayError("Target has been hit before. Try again.");
+                continue;
+            }
+
+            return target;
+        }
+
+        throw new OperationCanceledException();
     }
 
-    private Task FireAtOtherPlayer(TargetCoordinates targetCoordinates)
+    private async Task<HitResult> FireAtOtherPlayer(TargetCoordinates targetCoordinates, IPlayer target, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await target.HitTile(targetCoordinates);
+    }
+
+    private TurnResult GetTurnResult(HitResult hitResult, IPlayer target)
+    {
+        // TODO: Does this work?
+        var shipSunk = hitResult.Ship?.Health <= 0;
+        
+        return new TurnResult(hitResult.shipHit, shipSunk )
     }
 }
