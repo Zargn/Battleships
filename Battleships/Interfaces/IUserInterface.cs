@@ -17,4 +17,6 @@ public interface IUserInterface
 
     public ShipPlacementInformation GetShipPlacementInformation(int shipLength);
     public void DisplayError(string message);
+
+    public TargetCoordinates GetTargetCoordinates();
 }

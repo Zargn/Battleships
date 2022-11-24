@@ -92,7 +92,8 @@ public class ConsoleUserInterface : IUserInterface
         Console.WriteLine($"Error: {message}");
     }
 
-    private TargetCoordinates GetTargetCoordinates()
+    // TODO: Add string message argument?
+    public TargetCoordinates GetTargetCoordinates()
     {
         Console.WriteLine("Please enter target coordinates: (Xvalue Yvalue)");
         while (true)
