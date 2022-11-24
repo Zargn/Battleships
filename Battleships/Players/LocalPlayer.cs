@@ -127,7 +127,7 @@ public class LocalPlayer : IPlayer
 
     private async Task<HitResult> FireAtOtherPlayer(TargetCoordinates targetCoordinates, IPlayer target, CancellationToken cancellationToken)
     {
-        return await target.HitTile(targetCoordinates);
+        return await target.HitTile(targetCoordinates, cancellationToken);
     }
 
     private TurnResult GetTurnResult(HitResult hitResult, IPlayer target)
@@ -140,11 +140,9 @@ public class LocalPlayer : IPlayer
     
     
 
-    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates)
+    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken)
     {
         return Task.FromResult(arena.FireAtTile(targetCoordinates));
-        
-        throw new NotImplementedException();
     }
 
     public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)

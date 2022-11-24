@@ -19,7 +19,7 @@ public interface IPlayer
     
     // public Task<FiringTarget> GetFiringTargetAsync();
 
-    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates);
+    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken);
 
     public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics);
 
