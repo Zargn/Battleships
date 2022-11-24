@@ -32,8 +32,14 @@ public class ConsoleUserInterface : IUserInterface
                 var tile = tiles[x, y];
                 var symbol = '~';
 
+                if (tile.Hit)
+                    symbol = 'O';
+
                 if (tile.OccupiedByShip)
                     symbol = '#';
+
+                if (tile.Hit && tile.OccupiedByShip)
+                    symbol = 'X';
 
                 sb.Append($"{symbol} ");
                 // sb.Append($"{x}{y} ");
