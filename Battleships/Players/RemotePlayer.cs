@@ -2,14 +2,15 @@
 using Battleships.Interfaces;
 using Battleships.objects;
 using Battleships.objects.Enums;
+using ForwardingClient;
 
 namespace Battleships.Players;
 
 public class RemotePlayer : IPlayer
 {
     private IUserInterface userInterface;
-    
-    
+    private FwClient netClient;
+
 
     public StartingPlayer PlayerStartPriority { get; }
     public string UserName { get; }
