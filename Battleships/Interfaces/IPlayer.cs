@@ -12,6 +12,8 @@ public interface IPlayer
     public string UserName { get; }
     
     public Tile[,] KnownArenaTiles { get; }
+    public int ShipsLeft { get; }
+    public bool PlayerDefeated => ShipsLeft <= 0;
     
     public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken);
     
