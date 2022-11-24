@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Battleships.Interfaces;
 using Battleships.objects;
 using Battleships.Players;
@@ -118,6 +119,11 @@ public class ConsoleUserInterface : IUserInterface
                 Console.WriteLine("Input was in wrong format. Please enter coordinates in the following format: (Xvalue Yvalue)");
             }
         }
+    }
+
+    public IPAddress GetIpAddress()
+    {
+        throw new NotImplementedException();
     }
 
     private TargetCoordinates GetDirection()

@@ -20,4 +20,6 @@ public interface IUserInterface
     public void DisplayMessage(string message);
 
     public TargetCoordinates GetTargetCoordinates();
+
+    public IPAddress GetIpAddress();
 }
