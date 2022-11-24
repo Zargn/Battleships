@@ -12,6 +12,7 @@ public class Arena
 
     public int XSize => tiles.GetLength(0);
     public int YSize => tiles.GetLength(1);
+    public event EventHandler ShipSunk;
 
     public Tile[,] CurrentView => outsideViewTiles;
 
@@ -20,6 +21,7 @@ public class Arena
     public Arena(int xSize, int ySize)
     {
         tiles = new Tile[xSize, ySize];
+        outsideViewTiles = new Tile[xSize, ySize];
     }
 
     public Tile this[TargetCoordinates targetCoordinates]
@@ -176,8 +178,11 @@ public class Arena
         outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = true;
         var ship = GetShipAtCoordinates(targetCoordinates);
         ship.Health--;
+        
+        if (ship.ShipSunk)
+            ShipSunk.Invoke(this, EventArgs.Empty);
+        
         return new HitResult(true, ship);
-
     }
 
     private Ship? GetShipAtCoordinates(TargetCoordinates targetCoordinates)
