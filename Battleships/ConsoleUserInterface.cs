@@ -14,7 +14,7 @@ public class ConsoleUserInterface : IUserInterface
 
     public IPlayer GetPlayer2()
     {
-        throw new NotImplementedException();
+        return new LocalPlayer(this);
     }
 
     public void DrawTiles(Tile[,] tiles)
