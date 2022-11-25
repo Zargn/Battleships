@@ -4,6 +4,10 @@ using Battleships.objects;
 using Battleships.objects.Enums;
 using Battleships.objects.networking;
 using ForwardingClient;
+using ForwardingServer;
+using ForwardingServer.Resources;
+using ForwardingServer.Resources.InformationPackages;
+using Unnamed_Networking_Plugin;
 
 namespace Battleships.Players;
 
@@ -11,6 +15,7 @@ public class RemotePlayer : IPlayer
 {
     private IUserInterface userInterface;
     private FwClient netClient;
+    private string groupCode;
 
 
     public StartingPlayer PlayerStartPriority { get; }
@@ -30,7 +35,9 @@ public class RemotePlayer : IPlayer
     public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         netClient = await ConnectToServer(cancellationToken);
+        ConfigureSubscribers();
         await ListGroups();
+        await CreateGroup();
     }
 
     private async Task<FwClient> ConnectToServer(CancellationToken cancellationToken)
@@ -46,7 +53,7 @@ public class RemotePlayer : IPlayer
             var letterArray = new char[5];
             for (int i = 0; i < letterArray.Length; i++)
                 letterArray[i] = allowedLetters[Random.Shared.Next(allowedLetters.Length)];
-            string groupCode = new string(letterArray);
+            groupCode = new string(letterArray);
             var identification = new OnlineUserIdentification(groupCode);
             var identificationPackage = new OnlineUserIdentificationPackage(identification);
 
@@ -64,15 +71,47 @@ public class RemotePlayer : IPlayer
         // throw new NotImplementedException();
     }
 
+    private void ConfigureSubscribers()
+    {
+        netClient.PackageBroker.SubscribeToPackage<GroupsListPackage>(HandleGroupsListPackage);
+        netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
+    }
+    
     private async Task ListGroups()
     {
-        
+        await netClient.SendListGroupsRequest();
     }
+
+    private async Task CreateGroup()
+    {
+        var groupSettings = new GroupSettings(2, groupCode, "This should be the local players username or something");
+
+        await netClient.SendCreateGroupRequest(groupSettings);
+    }
+
+
+
+    private void HandleGroupsListPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var groupList = (args.ReceivedPackage as GroupsListPackage).GroupInformation;
+        foreach (var groupInformation in groupList)
+        {
+            Console.WriteLine(groupInformation);
+        }
+    }
+
+    private void HandleErrorPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var errorPackage = args.ReceivedPackage as ErrorPackage;
+        userInterface.DisplayError($"{errorPackage.Type}: {errorPackage.ErrorMessage} | {errorPackage.Exception}");
+    }
+
 
 
 
     public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
+        Console.ReadLine();
         throw new NotImplementedException();
     }
 
