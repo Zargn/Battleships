@@ -10,12 +10,14 @@ public class ConsoleUserInterface : IUserInterface
 {
     public IPlayer GetPlayer1()
     {
+        Console.WriteLine("Make player type selection possible...");
         return new LocalPlayer(this);
     }
 
     public IPlayer GetPlayer2()
     {
-        return new LocalPlayer(this);
+        Console.WriteLine("Make player type selection possible...");
+        return new RemotePlayer(this);
     }
 
     public void DrawTiles(Tile[,] tiles)
