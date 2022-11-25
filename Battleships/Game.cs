@@ -39,17 +39,17 @@ public class Game
         await gameLoopTask;
     }
 
-    private Task InitializeGame()
+    private async Task InitializeGame()
     {
         CancellationTokenSource cancelSource = new CancellationTokenSource();
         
         var player1 = userInterface.GetPlayer1();
-        player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
+        await player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
 
         var player2 = userInterface.GetPlayer2();
-        player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
+        await player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
 
-        return GameLoop(player1, player2);
+        await GameLoop(player1, player2);
     }
 
     private async Task GameLoop(IPlayer player1, IPlayer player2)
