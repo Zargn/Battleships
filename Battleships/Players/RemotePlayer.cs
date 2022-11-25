@@ -39,7 +39,7 @@ public class RemotePlayer : IPlayer
         bool success = false;
         while (!success)
         {
-            if (!cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();
             
             var allowedLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -56,7 +56,7 @@ public class RemotePlayer : IPlayer
 
             success = await client.ConnectAsync(ip, 25564);
         }
-
+        
         return client;
 
         // Try to connect using other players username as identification.
