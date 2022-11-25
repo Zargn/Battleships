@@ -125,7 +125,18 @@ public class ConsoleUserInterface : IUserInterface
 
     public IPAddress GetIpAddress()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Please enter target coordinates: (Xvalue Yvalue)");
+        while (true)
+        {
+            try
+            {
+                return IPAddress.Parse(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Input was in wrong format. Please enter coordinates in the following format: (Xvalue Yvalue)");
+            }
+        }
     }
 
     private TargetCoordinates GetDirection()
