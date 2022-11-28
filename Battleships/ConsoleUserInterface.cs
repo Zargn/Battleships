@@ -128,7 +128,7 @@ public class ConsoleUserInterface : IUserInterface
 
     public IPAddress GetIpAddress()
     {
-        Console.WriteLine("Please enter target coordinates: (Xvalue Yvalue)");
+        Console.WriteLine("Please enter server ip address: (0-255.0-255.0-255.0-255)");
         while (true)
         {
             try
@@ -137,7 +137,7 @@ public class ConsoleUserInterface : IUserInterface
             }
             catch (FormatException)
             {
-                Console.WriteLine("Input was in wrong format. Please enter coordinates in the following format: (Xvalue Yvalue)");
+                Console.WriteLine("Input was in wrong format. Please enter a valid Ipv4 address. Format: (0-255.0-255.0-255.0-255)");
             }
         }
     }
