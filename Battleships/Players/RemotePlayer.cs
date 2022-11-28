@@ -26,7 +26,7 @@ public class RemotePlayer : IPlayer
 
     public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
-    public Tile[,] KnownArenaTiles { get; }
+    public Tile[,] KnownArenaTiles { get; set; }
     public int ShipsLeft { get; }
     
     
@@ -41,6 +41,8 @@ public class RemotePlayer : IPlayer
     
     public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
+        KnownArenaTiles = new Tile[xSize, ySize];
+        
         netClient = await ConnectToServer(cancellationToken);
         ConfigureSubscribers();
         // await ListGroups();
