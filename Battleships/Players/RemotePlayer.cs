@@ -16,7 +16,10 @@ public class RemotePlayer : IPlayer
     private IUserInterface userInterface;
     private FwClient netClient;
     private string groupCode;
-    private SemaphoreSlim userNameReceivedSignal = new SemaphoreSlim(0, 1);
+    private IPlayer opponent;
+        
+    private SemaphoreSlim userNameReceived = new SemaphoreSlim(0, 1);
+    private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
 
     public StartingPlayer PlayerStartPriority { get; }
     public string UserName { get; private set; }
@@ -25,9 +28,10 @@ public class RemotePlayer : IPlayer
     
     
     
-    public RemotePlayer(IUserInterface userInterface)
+    public RemotePlayer(IUserInterface userInterface, IPlayer opponent)
     {
         this.userInterface = userInterface;
+        this.opponent = opponent;
     }
     
     
@@ -40,7 +44,7 @@ public class RemotePlayer : IPlayer
 
         if (userInterface.GetYesNoAnswer("Do you want to join a existing group?"))
         {
-            await JoinMode();
+            await JoinMode(cancellationToken);
         }
         else
         {
@@ -86,6 +90,7 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<GroupsListPackage>(HandleGroupsListPackage);
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
+        netClient.PackageBroker.SubscribeToPackage<OnlineUserIdentificationPackage>(HandleJoinedGroupPackage);
     }
     
     private async Task ListGroups()
@@ -93,10 +98,31 @@ public class RemotePlayer : IPlayer
         await netClient.SendListGroupsRequest();
     }
     
-    private async Task JoinMode()
+    
+    
+    private async Task JoinMode(CancellationToken cancellationToken)
+    {
+        // TODO: It is probably better to throw instead of stopping the loop when canceled.
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var targetCode = userInterface.GetTargetGroupCode();
+
+            await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode, ""));
+
+            await userInGroup.WaitAsync(cancellationToken);
+
+            await netClient.SendPackageToAllGroupMembers(new UserNamePackage(opponent.UserName));
+
+            await userNameReceived.WaitAsync(cancellationToken);
+        }
+    }
+
+    private async Task<bool> SuccessfullyJoined()
     {
         
     }
+
+
 
     private async Task CreateMode(CancellationToken cancellationToken)
     {
@@ -105,8 +131,9 @@ public class RemotePlayer : IPlayer
         userInterface.DisplayMessage($"Group created. Join code is: [{groupCode}]");
         userInterface.DisplayMessage($"Waiting for remote player to connect...");
         
-        await userNameReceivedSignal.WaitAsync(cancellationToken);
-        
+        await userNameReceived.WaitAsync(cancellationToken);
+        await netClient.SendPackageToAllGroupMembers(new UserNamePackage(opponent.UserName));
+
         userInterface.DisplayMessage($"{UserName} joined the game");
     }
 
@@ -138,7 +165,12 @@ public class RemotePlayer : IPlayer
     {
         var package = args.ReceivedPackage as UserNamePackage;
         UserName = package.UserName;
-        userNameReceivedSignal.Release();
+        userNameReceived.Release();
+    }
+
+    private void HandleJoinedGroupPackage(object? o, PackageReceivedEventArgs args)
+    {
+        userInGroup.Release();
     }
 
 
