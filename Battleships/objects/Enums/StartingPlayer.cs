@@ -2,7 +2,7 @@
 
 public enum StartingPlayer
 {
-    Yes,
-    Maybe,
-    No
+    Yes = 3,
+    Maybe = 2,
+    No = 1
 }
