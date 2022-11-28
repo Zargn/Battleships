@@ -16,10 +16,10 @@ public class RemotePlayer : IPlayer
     private IUserInterface userInterface;
     private FwClient netClient;
     private string groupCode;
-
+    private SemaphoreSlim userNameReceivedSignal = new SemaphoreSlim(0, 1);
 
     public StartingPlayer PlayerStartPriority { get; }
-    public string UserName { get; }
+    public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles { get; }
     public int ShipsLeft { get; }
     
@@ -37,7 +37,17 @@ public class RemotePlayer : IPlayer
         netClient = await ConnectToServer(cancellationToken);
         ConfigureSubscribers();
         await ListGroups();
-        await CreateGroup();
+
+        if (userInterface.GetYesNoAnswer("Do you want to join a existing group?"))
+        {
+            await JoinMode();
+        }
+        else
+        {
+            await CreateMode(cancellationToken);
+        }
+        
+        
     }
 
     private async Task<FwClient> ConnectToServer(CancellationToken cancellationToken)
@@ -75,11 +85,29 @@ public class RemotePlayer : IPlayer
     {
         netClient.PackageBroker.SubscribeToPackage<GroupsListPackage>(HandleGroupsListPackage);
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
+        netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
     }
     
     private async Task ListGroups()
     {
         await netClient.SendListGroupsRequest();
+    }
+    
+    private async Task JoinMode()
+    {
+        
+    }
+
+    private async Task CreateMode(CancellationToken cancellationToken)
+    {
+        await CreateGroup();
+        
+        userInterface.DisplayMessage($"Group created. Join code is: [{groupCode}]");
+        userInterface.DisplayMessage($"Waiting for remote player to connect...");
+        
+        await userNameReceivedSignal.WaitAsync(cancellationToken);
+        
+        userInterface.DisplayMessage($"{UserName} joined the game");
     }
 
     private async Task CreateGroup()
@@ -104,6 +132,13 @@ public class RemotePlayer : IPlayer
     {
         var errorPackage = args.ReceivedPackage as ErrorPackage;
         userInterface.DisplayError($"{errorPackage.Type}: {errorPackage.ErrorMessage} | {errorPackage.Exception}");
+    }
+
+    private void HandleUserNamePackage(object? o, PackageReceivedEventArgs args)
+    {
+        var package = args.ReceivedPackage as UserNamePackage;
+        UserName = package.UserName;
+        userNameReceivedSignal.Release();
     }
 
 
