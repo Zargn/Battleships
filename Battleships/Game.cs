@@ -59,7 +59,8 @@ public class Game
         bool startingPlayerTurn = true;
 
         CancellationTokenSource cancelSource = new CancellationTokenSource();
-        
+
+        userInterface.DisplayMessage($"{GetIPlayer(players, startingPlayerTurn).UserName} starts!");
 
         while (true)
         {
