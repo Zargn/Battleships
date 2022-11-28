@@ -33,7 +33,7 @@ public class RemotePlayer : IPlayer
     public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles { get; set; }
-    public int ShipsLeft { get; }
+    public int ShipsLeft { get; private set; }
     
     
     
@@ -48,6 +48,7 @@ public class RemotePlayer : IPlayer
     public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         KnownArenaTiles = new Tile[xSize, ySize];
+        ShipsLeft = shipLengths.Length;
         
         netClient = await ConnectToServer(cancellationToken);
         ConfigureSubscribers();
@@ -104,7 +105,9 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
         netClient.PackageBroker.SubscribeToPackage<ClientJoinedGroupPackage<OnlineUserIdentification>>(HandleJoinedGroupPackage);
+        netClient.PackageBroker.SubscribeToPackage<HitTilePackage>(HandleHitTilePackage);
         netClient.PackageBroker.SubscribeToPackage<HitResultPackage>(HandleHitResultPackage);
+        netClient.PackageBroker.SubscribeToPackage<ShipSunkPackage>(HandleShipSunkPackage);
     }
     
     private async Task ListGroups()
@@ -205,7 +208,9 @@ public class RemotePlayer : IPlayer
     private void HandleHitTilePackage(object? o, PackageReceivedEventArgs args)
     {
         var package = args.ReceivedPackage as HitTilePackage;
-        
+
+        hitTileCoordinatesCache = package.TargetCoordinates;
+        hitTileCoordinatesReceived.Release();
     }
 
     private void HandleHitResultPackage(object? o, PackageReceivedEventArgs args)
@@ -215,6 +220,11 @@ public class RemotePlayer : IPlayer
         hitResultReceived.Release();
     }
 
+    private void HandleShipSunkPackage(object? o, PackageReceivedEventArgs args)
+    {
+        ShipsLeft--;
+    }
+    
 
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
@@ -235,6 +245,9 @@ public class RemotePlayer : IPlayer
             userInterface.DisplayMessage($"{UserName} sunk all of your ships!");
 
         userInterface.DrawTiles(target.KnownArenaTiles);
+
+        if (hitResult.Ship?.ShipSunk == true)
+            await netClient.SendPackageToAllGroupMembers(new ShipSunkPackage());
 
         await netClient.SendPackageToAllGroupMembers(new HitResultPackage(hitResult));
 
