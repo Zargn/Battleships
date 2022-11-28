@@ -24,7 +24,7 @@ public class RemotePlayer : IPlayer
     private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
     private SemaphoreSlim errorReceived = new SemaphoreSlim(0, 1);
 
-    public StartingPlayer PlayerStartPriority { get; }
+    public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles { get; }
     public int ShipsLeft { get; }
@@ -48,10 +48,12 @@ public class RemotePlayer : IPlayer
         if (userInterface.GetYesNoAnswer("Do you want to join a existing group?"))
         {
             await JoinMode(cancellationToken);
+            PlayerStartPriority = StartingPlayer.Yes;
         }
         else
         {
             await CreateMode(cancellationToken);
+            PlayerStartPriority = StartingPlayer.No;
         }
         
         
@@ -120,6 +122,8 @@ public class RemotePlayer : IPlayer
             await netClient.SendPackageToAllGroupMembers(new UserNamePackage(opponent.UserName));
 
             await userNameReceived.WaitAsync(cancellationToken);
+            
+            return;
         }
     }
 
