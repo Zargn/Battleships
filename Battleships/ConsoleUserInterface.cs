@@ -166,4 +166,16 @@ public class ConsoleUserInterface : IUserInterface
             }
         }
     }
+
+    public string GetTargetGroupCode()
+    {
+        Console.WriteLine("Please enter group code to join: ");
+        while (true)
+        {
+            var input = Console.ReadLine();
+            if (input.ToUpper().Length == 5)
+                return input;
+            Console.WriteLine("Invalid code length. Please enter 5 characters only.");
+        }
+    }
 }

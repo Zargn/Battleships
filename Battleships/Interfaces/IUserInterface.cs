@@ -22,4 +22,5 @@ public interface IUserInterface
     public TargetCoordinates GetTargetCoordinates();
 
     public IPAddress GetIpAddress();
+    public string GetTargetGroupCode();
 }
