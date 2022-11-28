@@ -14,7 +14,7 @@ public class LocalPlayer : IPlayer
 
 
 
-    public StartingPlayer PlayerStartPriority => StartingPlayer.Yes;
+    public StartingPlayer PlayerStartPriority => StartingPlayer.Maybe;
     public string UserName { get; private set; }
 
     public Tile[,] KnownArenaTiles => arena.CurrentView;
