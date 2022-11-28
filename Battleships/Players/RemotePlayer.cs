@@ -24,6 +24,9 @@ public class RemotePlayer : IPlayer
     private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
     private SemaphoreSlim errorReceived = new SemaphoreSlim(0, 1);
 
+    private HitResult? hitResultCache;
+    private SemaphoreSlim hitResultReceived = new SemaphoreSlim(0, 1);
+
     public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles { get; set; }
@@ -98,6 +101,7 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
         netClient.PackageBroker.SubscribeToPackage<ClientJoinedGroupPackage<OnlineUserIdentification>>(HandleJoinedGroupPackage);
+        netClient.PackageBroker.SubscribeToPackage<HitResultPackage>(HandleHitResultPackage);
     }
     
     private async Task ListGroups()
@@ -195,6 +199,12 @@ public class RemotePlayer : IPlayer
             userInGroup.Release();
     }
 
+    private void HandleHitResultPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var package = args.ReceivedPackage as HitResultPackage;
+        hitResultCache = package.HitResult;
+        hitResultReceived.Release();
+    }
 
 
 
@@ -206,9 +216,16 @@ public class RemotePlayer : IPlayer
 
     
     
-    public Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken)
+    public async Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await netClient.SendPackageToAllGroupMembers(new HitTilePackage(targetCoordinates));
+
+        await hitResultReceived.WaitAsync(cancellationToken);
+
+        var cached = hitResultCache;
+        hitResultCache = null;
+
+        return cached;
     }
 
     
