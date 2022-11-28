@@ -1,6 +1,8 @@
-﻿namespace Battleships.objects.networking;
+﻿using Unnamed_Networking_Plugin.Resources;
 
-public class HitTilePackage
+namespace Battleships.objects.networking;
+
+public class HitTilePackage : Package
 {
     public TargetCoordinates TargetCoordinates { get; init; }
 
