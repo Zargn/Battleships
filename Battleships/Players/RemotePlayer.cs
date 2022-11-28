@@ -252,6 +252,9 @@ public class RemotePlayer : IPlayer
         var cached = hitResultCache;
         hitResultCache = null;
 
+        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
+        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = cached.shipHit;
+        
         return cached;
     }
 
