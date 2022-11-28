@@ -17,6 +17,7 @@ public class RemotePlayer : IPlayer
     private FwClient netClient;
     private string groupCode;
     private IPlayer opponent;
+    private string remoteGroupCode;
     
     
     private SemaphoreSlim userNameReceived = new SemaphoreSlim(0, 1);
@@ -42,7 +43,7 @@ public class RemotePlayer : IPlayer
     {
         netClient = await ConnectToServer(cancellationToken);
         ConfigureSubscribers();
-        await ListGroups();
+        // await ListGroups();
 
         if (userInterface.GetYesNoAnswer("Do you want to join a existing group?"))
         {
@@ -92,7 +93,7 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<GroupsListPackage>(HandleGroupsListPackage);
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
-        netClient.PackageBroker.SubscribeToPackage<OnlineUserIdentificationPackage>(HandleJoinedGroupPackage);
+        netClient.PackageBroker.SubscribeToPackage<ClientJoinedGroupPackage<OnlineUserIdentification>>(HandleJoinedGroupPackage);
     }
     
     private async Task ListGroups()
@@ -183,7 +184,9 @@ public class RemotePlayer : IPlayer
 
     private void HandleJoinedGroupPackage(object? o, PackageReceivedEventArgs args)
     {
-        userInGroup.Release();
+        var package = args.ReceivedPackage as ClientJoinedGroupPackage<OnlineUserIdentification>;
+        if (package.ClientInformation.UserName == groupCode)
+            userInGroup.Release();
     }
 
 
