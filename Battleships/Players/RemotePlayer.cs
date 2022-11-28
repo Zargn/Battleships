@@ -17,9 +17,11 @@ public class RemotePlayer : IPlayer
     private FwClient netClient;
     private string groupCode;
     private IPlayer opponent;
-        
+    
+    
     private SemaphoreSlim userNameReceived = new SemaphoreSlim(0, 1);
     private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
+    private SemaphoreSlim errorReceived = new SemaphoreSlim(0, 1);
 
     public StartingPlayer PlayerStartPriority { get; }
     public string UserName { get; private set; }
@@ -109,8 +111,11 @@ public class RemotePlayer : IPlayer
 
             await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode, ""));
 
-            await userInGroup.WaitAsync(cancellationToken);
-
+            // await userInGroup.WaitAsync(cancellationToken);
+            var success = await SuccessfullyJoined();
+            if (!success)
+                continue;
+            
             await netClient.SendPackageToAllGroupMembers(new UserNamePackage(opponent.UserName));
 
             await userNameReceived.WaitAsync(cancellationToken);
@@ -119,7 +124,14 @@ public class RemotePlayer : IPlayer
 
     private async Task<bool> SuccessfullyJoined()
     {
-        
+        var waitForErrorReceived = WaitForErrorReceived();
+        await Task.WhenAny(userInGroup.WaitAsync(), waitForErrorReceived);
+        return !waitForErrorReceived.IsCompleted;
+    }
+
+    private async Task WaitForErrorReceived()
+    {
+        await errorReceived.WaitAsync();
     }
 
 
@@ -159,6 +171,7 @@ public class RemotePlayer : IPlayer
     {
         var errorPackage = args.ReceivedPackage as ErrorPackage;
         userInterface.DisplayError($"{errorPackage.Type}: {errorPackage.ErrorMessage} | {errorPackage.Exception}");
+        errorReceived.Release();
     }
 
     private void HandleUserNamePackage(object? o, PackageReceivedEventArgs args)
