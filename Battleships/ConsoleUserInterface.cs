@@ -8,16 +8,19 @@ namespace Battleships;
 
 public class ConsoleUserInterface : IUserInterface
 {
+    private IPlayer player1;
+    
     public IPlayer GetPlayer1()
     {
         Console.WriteLine("Make player type selection possible...");
-        return new LocalPlayer(this);
+        player1 = new LocalPlayer(this);
+        return player1;
     }
 
     public IPlayer GetPlayer2()
     {
         Console.WriteLine("Make player type selection possible...");
-        return new RemotePlayer(this);
+        return new RemotePlayer(this, player1);
     }
 
     public void DrawTiles(Tile[,] tiles)
