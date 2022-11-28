@@ -24,6 +24,9 @@ public class RemotePlayer : IPlayer
     private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
     private SemaphoreSlim errorReceived = new SemaphoreSlim(0, 1);
 
+    private TargetCoordinates hitTileCoordinatesCache;
+    private SemaphoreSlim hitTileCoordinatesReceived = new SemaphoreSlim(0, 1);
+    
     private HitResult? hitResultCache;
     private SemaphoreSlim hitResultReceived = new SemaphoreSlim(0, 1);
 
@@ -199,6 +202,12 @@ public class RemotePlayer : IPlayer
             userInGroup.Release();
     }
 
+    private void HandleHitTilePackage(object? o, PackageReceivedEventArgs args)
+    {
+        var package = args.ReceivedPackage as HitTilePackage;
+        
+    }
+
     private void HandleHitResultPackage(object? o, PackageReceivedEventArgs args)
     {
         var package = args.ReceivedPackage as HitResultPackage;
@@ -208,10 +217,28 @@ public class RemotePlayer : IPlayer
 
 
 
-    public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
+    public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        Console.ReadLine();
-        throw new NotImplementedException();
+        await hitTileCoordinatesReceived.WaitAsync(cancellationToken);
+
+        var targetCoordinates = hitTileCoordinatesCache;
+
+        var hitResult = await target.HitTile(targetCoordinates, cancellationToken);
+
+        var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated);
+        
+        if (turnResult.ShipHitDEPRECATED)
+            userInterface.DisplayMessage($"{UserName} hit one of your ships!");
+        if (turnResult.ShipSunkDEPRECATED)
+            userInterface.DisplayMessage($"{UserName} sunk one of your ships!");
+        if (turnResult.TargetPlayerDefeated)
+            userInterface.DisplayMessage($"{UserName} sunk all of your ships!");
+
+        userInterface.DrawTiles(target.KnownArenaTiles);
+
+        await netClient.SendPackageToAllGroupMembers(new HitResultPackage(hitResult));
+
+        return turnResult;
     }
 
     
