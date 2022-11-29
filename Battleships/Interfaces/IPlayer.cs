@@ -6,7 +6,7 @@ namespace Battleships.Interfaces;
 
 public interface IPlayer
 {
-    public Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken, CancellationTokenSource gameCancelSource);
+    public Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken);
 
     public StartingPlayer PlayerStartPriority { get; }
     public string UserName { get; }
@@ -23,6 +23,7 @@ public interface IPlayer
 
     public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics);
 
+    public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
 
     public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;

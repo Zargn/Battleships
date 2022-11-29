@@ -29,7 +29,7 @@ public class LocalPlayer : IPlayer
     
     
 
-    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken, CancellationTokenSource gameCancelSource)
+    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         UserName = userInterface.GetUsername();
 
@@ -170,8 +170,9 @@ public class LocalPlayer : IPlayer
     {
         throw new NotImplementedException();
     }
-    
-    
+
+    public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
+
 
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
     public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;

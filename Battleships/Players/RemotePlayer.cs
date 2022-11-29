@@ -48,7 +48,7 @@ public class RemotePlayer : IPlayer
     
     
     
-    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken, CancellationTokenSource gameCancelSource)
+    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         this.gameCancelSource = gameCancelSource;
         
@@ -114,6 +114,9 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<HitTilePackage>(HandleHitTilePackage);
         netClient.PackageBroker.SubscribeToPackage<HitResultPackage>(HandleHitResultPackage);
         netClient.PackageBroker.SubscribeToPackage<ShipSunkPackage>(HandleShipSunkPackage);
+        netClient.PackageBroker.SubscribeToPackage<ClientLeftGroupPackage<OnlineUserIdentification>>(HandleClientLeftGroupPackage);
+
+        netClient.ClientDisconnected += HandleClientDisconnected;
     }
     
     private async Task ListGroups()
@@ -237,6 +240,21 @@ public class RemotePlayer : IPlayer
     {
         ShipsLeft--;
     }
+
+    private void HandleClientLeftGroupPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var reason = $"{UserName} left the game";
+        var detailedReason = $"{UserName} unexpectedly left the game.";
+        PlayerUnavailable?.Invoke(this, new PlayerUnavailableEventArgs(reason, detailedReason));
+    }
+
+    private void HandleClientDisconnected(object? o, EventArgs args)
+    {
+        var reason = $"{UserName} left the game";
+        var detailedReason = $"{UserName} unexpectedly left the game.";
+        PlayerUnavailable?.Invoke(this, new PlayerUnavailableEventArgs(reason, detailedReason));
+    }
+    
     
 
 
@@ -291,8 +309,9 @@ public class RemotePlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    
-    
+    public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
+
+
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
     public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
 }
