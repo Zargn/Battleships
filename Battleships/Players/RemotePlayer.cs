@@ -18,6 +18,7 @@ public class RemotePlayer : IPlayer
     private string groupCode;
     private IPlayer opponent;
     private string remoteGroupCode;
+    private CancellationTokenSource gameCancelSource;
     
     
     private SemaphoreSlim userNameReceived = new SemaphoreSlim(0, 1);
@@ -47,8 +48,10 @@ public class RemotePlayer : IPlayer
     
     
     
-    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
+    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken, CancellationTokenSource gameCancelSource)
     {
+        this.gameCancelSource = gameCancelSource;
+        
         KnownArenaTiles = new Tile[xSize, ySize];
         ShipsLeft = shipLengths.Length;
         

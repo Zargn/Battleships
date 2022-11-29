@@ -29,7 +29,7 @@ public class LocalPlayer : IPlayer
     
     
 
-    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
+    public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken, CancellationTokenSource gameCancelSource)
     {
         UserName = userInterface.GetUsername();
 
