@@ -15,6 +15,8 @@ public class Game
     private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
     private const int ArenaSizeX = 10;
     private const int ArenaSizeY = 10;
+    
+    private CancellationTokenSource cancelSource = new CancellationTokenSource();
 
     private IUserInterface userInterface;
 
@@ -39,15 +41,21 @@ public class Game
         await gameLoopTask;
     }
 
+    public void Stop(string message = "Unknown")
+    {
+        userInterface.DisplayMessage($"Game ender early due to: {message}");
+        cancelSource.Cancel();
+    }
+
     private async Task InitializeGame()
     {
-        CancellationTokenSource cancelSource = new CancellationTokenSource();
+        CancellationTokenSource initializationCancelSource = new CancellationTokenSource();
         
         var player1 = userInterface.GetPlayer1();
-        await player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
+        await player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token, cancelSource);
 
         var player2 = userInterface.GetPlayer2();
-        await player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, cancelSource.Token);
+        await player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token, cancelSource);
 
         await GameLoop(player1, player2);
     }
@@ -58,18 +66,23 @@ public class Game
 
         bool startingPlayerTurn = true;
 
-        CancellationTokenSource cancelSource = new CancellationTokenSource();
-
         userInterface.DisplayMessage($"{GetIPlayer(players, startingPlayerTurn).UserName} starts!");
 
         while (true)
         {
-            var turnResult = await GetIPlayer(players, startingPlayerTurn).PlayTurnAsync(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
+            try
+            {
+                var turnResult = await GetIPlayer(players, startingPlayerTurn).PlayTurnAsync(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
             
-            if (turnResult.TargetPlayerDefeated)
+                if (turnResult.TargetPlayerDefeated)
+                    break;
+            
+                startingPlayerTurn = !startingPlayerTurn;
+            }
+            catch (OperationCanceledException)
+            {
                 break;
-            
-            startingPlayerTurn = !startingPlayerTurn;
+            }
         }
     }
 
