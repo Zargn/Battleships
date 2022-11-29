@@ -33,7 +33,7 @@ public class LocalPlayer : IPlayer
     {
         UserName = userInterface.GetUsername();
 
-        if (userInterface.GetYesNoAnswer("Do you want to place your ships manually?"))
+        if (userInterface.GetYesNoAnswer("Do you want to place your ships manually?", cancellationToken))
         {
             PlaceShipsManual(shipLengths, xSize, ySize, cancellationToken);
         }
@@ -69,7 +69,7 @@ public class LocalPlayer : IPlayer
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var placementInformation = userInterface.GetShipPlacementInformation(shipLength);
+            var placementInformation = userInterface.GetShipPlacementInformation(shipLength, cancellationToken);
             var ship = new Ship(shipLength, placementInformation.Name);
             try
             {
@@ -92,7 +92,7 @@ public class LocalPlayer : IPlayer
             var tiles = arena.RandomiseShipLocations(shipLengths);
             
             userInterface.DrawTiles(tiles);
-            if (!userInterface.GetYesNoAnswer("Randomise again?"))
+            if (!userInterface.GetYesNoAnswer("Randomise again?", cancellationToken))
                 return;
         }
     }
@@ -125,7 +125,7 @@ public class LocalPlayer : IPlayer
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var target = userInterface.GetTargetCoordinates();
+            var target = userInterface.GetTargetCoordinates(cancellationToken);
             if (enemyTiles.GetLength(0) <= target.X || enemyTiles.GetLength(1) <= target.Y)
             {
                 userInterface.DisplayError("Target was out of bounds. Try again.");
