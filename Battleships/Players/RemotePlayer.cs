@@ -59,7 +59,7 @@ public class RemotePlayer : IPlayer
         ConfigureSubscribers();
         // await ListGroups();
 
-        if (userInterface.GetYesNoAnswer("Do you want to join a existing group?"))
+        if (userInterface.GetYesNoAnswer("Do you want to join a existing group?", cancellationToken))
         {
             await JoinMode(cancellationToken);
             PlayerStartPriority = StartingPlayer.Yes;
@@ -92,7 +92,7 @@ public class RemotePlayer : IPlayer
 
             client = new FwClient(new ConsoleLogger(), new JsonSerializerAdapter(), identificationPackage);
 
-            var ip = userInterface.GetIpAddress();
+            var ip = userInterface.GetIpAddress(cancellationToken);
 
             success = await client.ConnectAsync(ip, 25564);
         }
@@ -131,7 +131,7 @@ public class RemotePlayer : IPlayer
         // TODO: It is probably better to throw instead of stopping the loop when canceled.
         while (!cancellationToken.IsCancellationRequested)
         {
-            var targetCode = userInterface.GetTargetGroupCode();
+            var targetCode = userInterface.GetTargetGroupCode(cancellationToken);
 
             await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode, ""));
 
