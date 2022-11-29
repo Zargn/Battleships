@@ -250,8 +250,8 @@ public class RemotePlayer : IPlayer
 
     private void HandleClientDisconnected(object? o, EventArgs args)
     {
-        var reason = $"{UserName} left the game";
-        var detailedReason = $"{UserName} unexpectedly left the game.";
+        var reason = $"Lost connection to game server";
+        var detailedReason = $"Something caused the connection to the game server to be lost. Please check your internet connection otherwise contact the developer.";
         PlayerUnavailable?.Invoke(this, new PlayerUnavailableEventArgs(reason, detailedReason));
     }
     
