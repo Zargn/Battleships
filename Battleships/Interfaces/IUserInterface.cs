@@ -13,14 +13,14 @@ public interface IUserInterface
 
     public string GetUsername();
 
-    public bool GetYesNoAnswer(string question);
+    public bool GetYesNoAnswer(string question, CancellationToken cancellationToken);
 
-    public ShipPlacementInformation GetShipPlacementInformation(int shipLength);
+    public ShipPlacementInformation GetShipPlacementInformation(int shipLength, CancellationToken cancellationToken);
     public void DisplayError(string message);
     public void DisplayMessage(string message);
 
-    public TargetCoordinates GetTargetCoordinates();
+    public TargetCoordinates GetTargetCoordinates(CancellationToken cancellationToken);
 
-    public IPAddress GetIpAddress();
-    public string GetTargetGroupCode();
+    public IPAddress GetIpAddress(CancellationToken cancellationToken);
+    public string GetTargetGroupCode(CancellationToken cancellationToken);
 }

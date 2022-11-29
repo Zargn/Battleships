@@ -65,10 +65,13 @@ public class ConsoleUserInterface : IUserInterface
         return Console.ReadLine();
     }
 
-    public bool GetYesNoAnswer(string question)
+    public bool GetYesNoAnswer(string question, CancellationToken cancellationToken)
     {
         while (true)
         {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            
             Console.WriteLine(question);
             var response = Console.ReadLine();
 
@@ -85,13 +88,16 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    public ShipPlacementInformation GetShipPlacementInformation(int shipLength)
+    public ShipPlacementInformation GetShipPlacementInformation(int shipLength, CancellationToken cancellationToken)
     {
         Console.WriteLine($"Please enter location for ship of length: {shipLength}");
-        var coordinates = GetTargetCoordinates();
+        var coordinates = GetTargetCoordinates(cancellationToken);
 
+        if (cancellationToken.IsCancellationRequested)
+            throw new OperationCanceledException();
+        
         Console.WriteLine($"Please enter direction: ");
-        var direction = GetDirection();
+        var direction = GetDirection(cancellationToken);
 
         Console.WriteLine("Please enter Ship Name. (Leave empty for default.)");
         var name = Console.ReadLine();
@@ -110,11 +116,14 @@ public class ConsoleUserInterface : IUserInterface
     }
 
     // TODO: Add string message argument?
-    public TargetCoordinates GetTargetCoordinates()
+    public TargetCoordinates GetTargetCoordinates(CancellationToken cancellationToken)
     {
         Console.WriteLine("Please enter target coordinates: (Xvalue Yvalue)");
         while (true)
         {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            
             try
             {
                 return TargetCoordinates.FromString(Console.ReadLine());
@@ -126,7 +135,7 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    public IPAddress GetIpAddress()
+    public IPAddress GetIpAddress(CancellationToken cancellationToken)
     {
         return IPAddress.Parse("192.168.1.228");
         Console.WriteLine("Please enter server ip address: (0-255.0-255.0-255.0-255)");
@@ -143,11 +152,14 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    private TargetCoordinates GetDirection()
+    private TargetCoordinates GetDirection(CancellationToken cancellationToken)
     {
         Console.WriteLine("Please enter direction: (North, East, South, West)");
         while (true)
         {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            
             var input = Console.ReadLine();
             if (input == null)
             {
@@ -171,11 +183,14 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    public string GetTargetGroupCode()
+    public string GetTargetGroupCode(CancellationToken cancellationToken)
     {
         Console.WriteLine("Please enter group code to join: ");
         while (true)
         {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            
             var input = Console.ReadLine();
             if (input.ToUpper().Length == 5)
                 return input;
