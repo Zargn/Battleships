@@ -128,6 +128,7 @@ public class ConsoleUserInterface : IUserInterface
 
     public IPAddress GetIpAddress()
     {
+        return IPAddress.Parse("192.168.1.228");
         Console.WriteLine("Please enter server ip address: (0-255.0-255.0-255.0-255)");
         while (true)
         {
