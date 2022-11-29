@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Battleships.EventArguments;
 using Battleships.Interfaces;
 using Battleships.objects.Enums;
 
@@ -41,9 +42,9 @@ public class Game
         await gameLoopTask;
     }
 
-    public void Stop(string message = "Unknown")
+    public void Stop(object? o, PlayerUnavailableEventArgs args)
     {
-        userInterface.DisplayMessage($"Game ender early due to: {message}");
+        userInterface.DisplayMessage($"Game ended early due to: {args.Reason}");
         cancelSource.Cancel();
     }
 
@@ -52,10 +53,12 @@ public class Game
         CancellationTokenSource initializationCancelSource = new CancellationTokenSource();
         
         var player1 = userInterface.GetPlayer1();
-        await player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token, cancelSource);
+        await player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token);
+        player1.PlayerUnavailable += Stop;
 
         var player2 = userInterface.GetPlayer2();
-        await player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token, cancelSource);
+        await player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token);
+        player2.PlayerUnavailable += Stop;
 
         await GameLoop(player1, player2);
     }
