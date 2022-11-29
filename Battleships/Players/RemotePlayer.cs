@@ -23,6 +23,8 @@ public class RemotePlayer : IPlayer
     private SemaphoreSlim userNameReceived = new SemaphoreSlim(0, 1);
     private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
     private SemaphoreSlim errorReceived = new SemaphoreSlim(0, 1);
+    private SemaphoreSlim warningReceived = new SemaphoreSlim(0, 1);
+
 
     private TargetCoordinates hitTileCoordinatesCache;
     private SemaphoreSlim hitTileCoordinatesReceived = new SemaphoreSlim(0, 1);
@@ -102,6 +104,7 @@ public class RemotePlayer : IPlayer
     private void ConfigureSubscribers()
     {
         netClient.PackageBroker.SubscribeToPackage<GroupsListPackage>(HandleGroupsListPackage);
+        netClient.PackageBroker.SubscribeToPackage<WarningPackage>(HandleWarningPackage);
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
         netClient.PackageBroker.SubscribeToPackage<ClientJoinedGroupPackage<OnlineUserIdentification>>(HandleJoinedGroupPackage);
@@ -141,9 +144,9 @@ public class RemotePlayer : IPlayer
 
     private async Task<bool> SuccessfullyJoined()
     {
-        var waitForErrorReceived = WaitForErrorReceived();
-        await Task.WhenAny(userInGroup.WaitAsync(), waitForErrorReceived);
-        return !waitForErrorReceived.IsCompleted;
+        var waitForUserInGroup = userInGroup.WaitAsync();
+        await Task.WhenAny(waitForUserInGroup, errorReceived.WaitAsync(), warningReceived.WaitAsync());
+        return waitForUserInGroup.IsCompleted;
     }
 
     private async Task WaitForErrorReceived()
@@ -184,10 +187,17 @@ public class RemotePlayer : IPlayer
         }
     }
 
+    private void HandleWarningPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var warningPackage = args.ReceivedPackage as WarningPackage;
+        userInterface.DisplayError($"[{warningPackage.WarningType}] {warningPackage.WarningMessage}");
+        warningReceived.Release();
+    }
+
     private void HandleErrorPackage(object? o, PackageReceivedEventArgs args)
     {
         var errorPackage = args.ReceivedPackage as ErrorPackage;
-        userInterface.DisplayError($"{errorPackage.Type}: {errorPackage.ErrorMessage} | {errorPackage.Exception}");
+        userInterface.DisplayError($"Server: {errorPackage.ErrorMessage} | {errorPackage.Exception}");
         errorReceived.Release();
     }
 
