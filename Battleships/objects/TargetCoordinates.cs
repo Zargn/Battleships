@@ -15,7 +15,7 @@ public struct TargetCoordinates
     public static TargetCoordinates East => new TargetCoordinates(1, 0);
     public static TargetCoordinates South => new TargetCoordinates(0, -1);
     public static TargetCoordinates West => new TargetCoordinates(-1, 0);
-    public static TargetCoordinates[] Directions => new[] {North, East, South, West};
+    public static TargetCoordinates[] Directions = {North, East, South, West};
 
     public static TargetCoordinates operator +(TargetCoordinates a, TargetCoordinates b) =>
         new TargetCoordinates(a.X + b.X, a.Y + b.Y);
