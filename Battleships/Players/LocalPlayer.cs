@@ -8,9 +8,8 @@ namespace Battleships.Players;
 
 public class LocalPlayer : IPlayer
 {
-    private Arena arena;
-    private StartingPlayer playerStartPriority;
-    private IUserInterface userInterface;
+    private Arena? arena;
+    private readonly IUserInterface userInterface;
 
 
 
@@ -18,7 +17,7 @@ public class LocalPlayer : IPlayer
     public string UserName { get; private set; }
 
     public Tile[,] KnownArenaTiles => arena.CurrentView;
-    public int ShipsLeft { get; set; }
+    public int ShipsLeft { get; private set; }
 
     
     
@@ -101,22 +100,11 @@ public class LocalPlayer : IPlayer
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        // userInterface.DrawTiles(target.KnownArenaTiles);
-        
         var firingTarget = GetFiringTarget(target.KnownArenaTiles, cancellationToken);
-
-        var hitResult = await FireAtOtherPlayer(firingTarget, target, cancellationToken);
+        
+        var hitResult = await target.HitTile(firingTarget, cancellationToken);
 
         var turnResult = GetTurnResult(hitResult, target);
-
-        // if (turnResult.ShipHit)
-        //     userInterface.DisplayMessage("Ship hit!");
-        // if (turnResult.ShipSunk)
-        //     userInterface.DisplayMessage("Ship sunk!");
-        // if (turnResult.TargetPlayerDefeated)
-        //     userInterface.DisplayMessage("Player defeated!");
-
-        // userInterface.DrawTiles(target.KnownArenaTiles);
         
         return turnResult;
     }
@@ -132,26 +120,16 @@ public class LocalPlayer : IPlayer
                 continue;
             }
 
-            if (enemyTiles[target.X, target.Y].Hit)
-            {
-                userInterface.DisplayError("Target has been hit before. Try again.");
-                continue;
-            }
-
-            return target;
+            if (!enemyTiles[target.X, target.Y].Hit) return target;
+            
+            userInterface.DisplayError("Target has been hit before. Try again.");
         }
 
         throw new OperationCanceledException();
     }
 
-    private async Task<HitResult> FireAtOtherPlayer(TargetCoordinates targetCoordinates, IPlayer target, CancellationToken cancellationToken)
+    private static TurnResult GetTurnResult(HitResult hitResult, IPlayer target)
     {
-        return await target.HitTile(targetCoordinates, cancellationToken);
-    }
-
-    private TurnResult GetTurnResult(HitResult hitResult, IPlayer target)
-    {
-        // TODO: Does this work?
         var shipSunk = hitResult.Ship?.Health <= 0;
 
         return new TurnResult(hitResult.shipHit, shipSunk, target.PlayerDefeated, hitResult.Ship);
@@ -172,8 +150,6 @@ public class LocalPlayer : IPlayer
     }
 
     public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
-
-
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
     public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
 }
