@@ -1,6 +1,7 @@
 ﻿using Battleships.objects.networking;
-using BattleshipsFwServer;
 using ForwardingServer;
+
+namespace BattleshipsFwServer;
 
 public class Server
 {
