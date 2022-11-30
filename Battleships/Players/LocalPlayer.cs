@@ -56,12 +56,12 @@ public class LocalPlayer : IPlayer
         arena = new Arena(xSize, ySize);
         userInterface.DrawTiles(arena.CurrentView, UserName);
         
-        while (!cancellationToken.IsCancellationRequested)
+        foreach (var i in shipLengths)
         {
-            foreach (var i in shipLengths)
-            {
-                PlaceShip(i, cancellationToken);
-            }
+            PlaceShip(i, cancellationToken);
+
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
         }
     }
 
