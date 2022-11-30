@@ -266,7 +266,7 @@ public class RemotePlayer : IPlayer
 
         var hitResult = await target.HitTile(targetCoordinates, cancellationToken);
 
-        var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated);
+        var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated, hitResult.Ship);
         
         // if (turnResult.ShipHitDEPRECATED)
         //     userInterface.DisplayMessage($"{UserName} hit one of your ships!");

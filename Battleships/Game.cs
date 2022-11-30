@@ -125,9 +125,9 @@ public class Game
 
     private void DisplayTurnResult(TurnResult turnResult, IPlayer player)
     {
-        if (turnResult.ShipSunkDEPRECATED)
+        if (turnResult.ShipSunk)
             userInterface.DisplayMessage($"{player.UserName} sunk a ship!");
-        else if (turnResult.ShipHitDEPRECATED)
+        else if (turnResult.ShipHit)
             userInterface.DisplayMessage($"{player.UserName} hit a ship!");
         else
             userInterface.DisplayMessage($"{player.UserName} missed!");

@@ -109,9 +109,9 @@ public class LocalPlayer : IPlayer
 
         var turnResult = GetTurnResult(hitResult, target);
 
-        if (turnResult.ShipHitDEPRECATED)
+        if (turnResult.ShipHit)
             userInterface.DisplayMessage("Ship hit!");
-        if (turnResult.ShipSunkDEPRECATED)
+        if (turnResult.ShipSunk)
             userInterface.DisplayMessage("Ship sunk!");
         if (turnResult.TargetPlayerDefeated)
             userInterface.DisplayMessage("Player defeated!");
@@ -154,7 +154,7 @@ public class LocalPlayer : IPlayer
         // TODO: Does this work?
         var shipSunk = hitResult.Ship?.Health <= 0;
 
-        return new TurnResult(hitResult.shipHit, shipSunk, target.PlayerDefeated);
+        return new TurnResult(hitResult.shipHit, shipSunk, target.PlayerDefeated, hitResult.Ship);
     }
     
     
