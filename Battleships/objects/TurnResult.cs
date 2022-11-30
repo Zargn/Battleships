@@ -13,7 +13,5 @@ public class TurnResult
     public bool ShipHit { get; }
     public bool ShipSunk { get; }
     public Ship? Ship { get; }
-    
-    // TODO: This class could potentially be completely replaced by a normal bool.
     public bool TargetPlayerDefeated { get; }
 }
