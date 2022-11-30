@@ -132,7 +132,7 @@ public class LocalPlayer : IPlayer
     {
         var shipSunk = hitResult.Ship?.Health <= 0;
 
-        return new TurnResult(hitResult.shipHit, shipSunk, target.PlayerDefeated, hitResult.Ship);
+        return new TurnResult(hitResult.ShipHit, shipSunk, target.PlayerDefeated, hitResult.Ship);
     }
     
     

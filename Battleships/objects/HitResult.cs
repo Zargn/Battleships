@@ -2,12 +2,12 @@
 
 public class HitResult
 {
-    public bool shipHit { get; }
+    public bool ShipHit { get; }
     public Ship? Ship { get; }
 
     public HitResult(bool shipHit, Ship? ship)
     {
-        this.shipHit = shipHit;
+        ShipHit = shipHit;
         Ship = ship;
     }
 }

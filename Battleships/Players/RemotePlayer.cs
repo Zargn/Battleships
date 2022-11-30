@@ -176,7 +176,7 @@ public class RemotePlayer : IPlayer
 
         var hitResult = await target.HitTile(targetCoordinates, cancellationToken);
 
-        var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated, hitResult.Ship);
+        var turnResult = new TurnResult(hitResult.ShipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated, hitResult.Ship);
         
         if (hitResult.Ship?.ShipSunk == true)
             await netClient.SendPackageToAllGroupMembers(new ShipSunkPackage());
@@ -198,7 +198,7 @@ public class RemotePlayer : IPlayer
         hitResultCache = null;
 
         KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
-        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = cached.shipHit;
+        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = cached.ShipHit;
         
         return cached;
     }
