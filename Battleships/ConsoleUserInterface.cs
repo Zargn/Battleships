@@ -23,11 +23,13 @@ public class ConsoleUserInterface : IUserInterface
         return new RemotePlayer(this, player1);
     }
 
-    public void DrawTiles(Tile[,] tiles)
+    public void DrawTiles(Tile[,] tiles, string username)
     {
         Console.WriteLine();
         
         StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine($"{username}'s board");
         
         for (int y = tiles.GetLength(1) - 1; y >= 0; y--)
         {

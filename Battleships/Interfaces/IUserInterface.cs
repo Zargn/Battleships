@@ -9,7 +9,7 @@ public interface IUserInterface
     public IPlayer GetPlayer2();
 
     // public void DrawArenas(IPlayer player1);
-    public void DrawTiles(Tile[,] tiles);
+    public void DrawTiles(Tile[,] tiles, string username);
 
     public string GetUsername();
 
