@@ -11,18 +11,15 @@ public struct TargetCoordinates
         Y = y;
     }
 
-    public static TargetCoordinates North => new TargetCoordinates(0, 1);
-    public static TargetCoordinates East => new TargetCoordinates(1, 0);
-    public static TargetCoordinates South => new TargetCoordinates(0, -1);
-    public static TargetCoordinates West => new TargetCoordinates(-1, 0);
-    public static TargetCoordinates[] Directions = {North, East, South, West};
+    public static TargetCoordinates North => new(0, 1);
+    public static TargetCoordinates East => new(1, 0);
+    public static TargetCoordinates South => new(0, -1);
+    public static TargetCoordinates West => new(-1, 0);
+    public static readonly TargetCoordinates[] Directions = {North, East, South, West};
 
-    public static TargetCoordinates operator +(TargetCoordinates a, TargetCoordinates b) =>
-        new TargetCoordinates(a.X + b.X, a.Y + b.Y);
-    public static TargetCoordinates operator -(TargetCoordinates a, TargetCoordinates b) =>
-        new TargetCoordinates(a.X - b.X, a.Y - b.Y);
-    public static TargetCoordinates operator *(TargetCoordinates a, int i) =>
-        new TargetCoordinates(a.X * i, a.Y * i);
+    public static TargetCoordinates operator +(TargetCoordinates a, TargetCoordinates b) => new(a.X + b.X, a.Y + b.Y);
+    public static TargetCoordinates operator -(TargetCoordinates a, TargetCoordinates b) => new(a.X - b.X, a.Y - b.Y);
+    public static TargetCoordinates operator *(TargetCoordinates a, int i) => new(a.X * i, a.Y * i);
     public static bool operator ==(TargetCoordinates a, TargetCoordinates b) => a.X == b.X && a.Y == b.Y;
     public static bool operator !=(TargetCoordinates a, TargetCoordinates b) => !(a == b);
 
@@ -50,11 +47,10 @@ public struct TargetCoordinates
         // No need to check the first letter for a space since in a valid input the first letter will always be a number.
         for (var i = 1; i < s.Length; i++)
         {
-            if (s[i] == ' ' && xString == null)
-            {
-                xString = s.Substring(startIndex, i);
-                startIndex = i + 1;
-            }
+            if (s[i] != ' ' || xString != null) continue;
+            
+            xString = s.Substring(startIndex, i);
+            startIndex = i + 1;
         }
 
         yString = s.Substring(startIndex, s.Length - startIndex);
