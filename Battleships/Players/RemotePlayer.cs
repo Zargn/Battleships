@@ -13,25 +13,23 @@ namespace Battleships.Players;
 
 public class RemotePlayer : IPlayer
 {
-    private IUserInterface userInterface;
+    private readonly IUserInterface userInterface;
     private FwClient netClient;
     private string groupCode;
-    private IPlayer opponent;
-    private string remoteGroupCode;
-    private CancellationTokenSource gameCancelSource;
-    
-    
-    private SemaphoreSlim userNameReceived = new SemaphoreSlim(0, 1);
-    private SemaphoreSlim userInGroup = new SemaphoreSlim(0, 1);
-    private SemaphoreSlim errorReceived = new SemaphoreSlim(0, 1);
-    private SemaphoreSlim warningReceived = new SemaphoreSlim(0, 1);
+    private readonly IPlayer opponent;
+
+
+    private readonly SemaphoreSlim userNameReceived = new(0, 1);
+    private readonly SemaphoreSlim userInGroup = new(0, 1);
+    private readonly SemaphoreSlim errorReceived = new(0, 1);
+    private readonly SemaphoreSlim warningReceived = new(0, 1);
 
 
     private TargetCoordinates hitTileCoordinatesCache;
-    private SemaphoreSlim hitTileCoordinatesReceived = new SemaphoreSlim(0, 1);
+    private readonly SemaphoreSlim hitTileCoordinatesReceived = new(0, 1);
     
     private HitResult? hitResultCache;
-    private SemaphoreSlim hitResultReceived = new SemaphoreSlim(0, 1);
+    private readonly SemaphoreSlim hitResultReceived = new(0, 1);
 
     public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
@@ -48,16 +46,16 @@ public class RemotePlayer : IPlayer
     
     
     
+    #region Initialization
+    
     public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
-        this.gameCancelSource = gameCancelSource;
-        
         KnownArenaTiles = new Tile[xSize, ySize];
         ShipsLeft = shipLengths.Length;
         
         netClient = await ConnectToServer(cancellationToken);
-        ConfigureSubscribers();
-        // await ListGroups();
+        
+        ConfigurePackageHandlers();
 
         if (userInterface.GetYesNoAnswer("Do you want to join a existing group?", cancellationToken))
         {
@@ -69,8 +67,6 @@ public class RemotePlayer : IPlayer
             await CreateMode(cancellationToken);
             PlayerStartPriority = StartingPlayer.No;
         }
-        
-        
     }
 
     private async Task<FwClient> ConnectToServer(CancellationToken cancellationToken)
@@ -98,15 +94,10 @@ public class RemotePlayer : IPlayer
         }
         
         return client;
-
-        // Try to connect using other players username as identification.
-        // If user already exists then add 1 to the end of username and try again. Repeat if needed with 2, 3, 4, etc.
-        // throw new NotImplementedException();
     }
 
-    private void ConfigureSubscribers()
+    private void ConfigurePackageHandlers()
     {
-        netClient.PackageBroker.SubscribeToPackage<GroupsListPackage>(HandleGroupsListPackage);
         netClient.PackageBroker.SubscribeToPackage<WarningPackage>(HandleWarningPackage);
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
@@ -118,24 +109,20 @@ public class RemotePlayer : IPlayer
 
         netClient.ClientDisconnected += HandleClientDisconnected;
     }
-    
-    private async Task ListGroups()
-    {
-        await netClient.SendListGroupsRequest();
-    }
-    
-    
-    
+
+
+
     private async Task JoinMode(CancellationToken cancellationToken)
     {
-        // TODO: It is probably better to throw instead of stopping the loop when canceled.
-        while (!cancellationToken.IsCancellationRequested)
+        while (true)
         {
             var targetCode = userInterface.GetTargetGroupCode(cancellationToken);
 
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+
             await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode, ""));
 
-            // await userInGroup.WaitAsync(cancellationToken);
             var success = await SuccessfullyJoined();
             if (!success)
                 continue;
@@ -154,12 +141,7 @@ public class RemotePlayer : IPlayer
         await Task.WhenAny(waitForUserInGroup, errorReceived.WaitAsync(), warningReceived.WaitAsync());
         return waitForUserInGroup.IsCompleted;
     }
-
-    private async Task WaitForErrorReceived()
-    {
-        await errorReceived.WaitAsync();
-    }
-
+    
 
 
     private async Task CreateMode(CancellationToken cancellationToken)
@@ -181,18 +163,60 @@ public class RemotePlayer : IPlayer
 
         await netClient.SendCreateGroupRequest(groupSettings);
     }
+    
+    #endregion
 
 
-
-    private void HandleGroupsListPackage(object? o, PackageReceivedEventArgs args)
+    
+    public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        var groupList = (args.ReceivedPackage as GroupsListPackage).GroupInformation;
-        foreach (var groupInformation in groupList)
-        {
-            Console.WriteLine(groupInformation);
-        }
+        await hitTileCoordinatesReceived.WaitAsync(cancellationToken);
+
+        var targetCoordinates = hitTileCoordinatesCache;
+
+        var hitResult = await target.HitTile(targetCoordinates, cancellationToken);
+
+        var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated, hitResult.Ship);
+        
+        if (hitResult.Ship?.ShipSunk == true)
+            await netClient.SendPackageToAllGroupMembers(new ShipSunkPackage());
+
+        await netClient.SendPackageToAllGroupMembers(new HitResultPackage(hitResult));
+
+        return turnResult;
     }
 
+    
+    
+    public async Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken)
+    {
+        await netClient.SendPackageToAllGroupMembers(new HitTilePackage(targetCoordinates));
+
+        await hitResultReceived.WaitAsync(cancellationToken);
+
+        var cached = hitResultCache;
+        hitResultCache = null;
+
+        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
+        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = cached.shipHit;
+        
+        return cached;
+    }
+
+    
+    
+    public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)
+    {
+        throw new NotImplementedException();
+    }
+
+    public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
+    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
+    public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
+    
+    
+    #region PackageHandlers
+    
     private void HandleWarningPackage(object? o, PackageReceivedEventArgs args)
     {
         var warningPackage = args.ReceivedPackage as WarningPackage;
@@ -255,63 +279,5 @@ public class RemotePlayer : IPlayer
         PlayerUnavailable?.Invoke(this, new PlayerUnavailableEventArgs(reason, detailedReason));
     }
     
-    
-
-
-    public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
-    {
-        await hitTileCoordinatesReceived.WaitAsync(cancellationToken);
-
-        var targetCoordinates = hitTileCoordinatesCache;
-
-        var hitResult = await target.HitTile(targetCoordinates, cancellationToken);
-
-        var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated, hitResult.Ship);
-        
-        // if (turnResult.ShipHitDEPRECATED)
-        //     userInterface.DisplayMessage($"{UserName} hit one of your ships!");
-        // if (turnResult.ShipSunkDEPRECATED)
-        //     userInterface.DisplayMessage($"{UserName} sunk one of your ships!");
-        // if (turnResult.TargetPlayerDefeated)
-        //     userInterface.DisplayMessage($"{UserName} sunk all of your ships!");
-
-        // userInterface.DrawTiles(target.KnownArenaTiles);
-
-        if (hitResult.Ship?.ShipSunk == true)
-            await netClient.SendPackageToAllGroupMembers(new ShipSunkPackage());
-
-        await netClient.SendPackageToAllGroupMembers(new HitResultPackage(hitResult));
-
-        return turnResult;
-    }
-
-    
-    
-    public async Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken)
-    {
-        await netClient.SendPackageToAllGroupMembers(new HitTilePackage(targetCoordinates));
-
-        await hitResultReceived.WaitAsync(cancellationToken);
-
-        var cached = hitResultCache;
-        hitResultCache = null;
-
-        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
-        KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = cached.shipHit;
-        
-        return cached;
-    }
-
-    
-    
-    public Task UnloadPlayer(EndOfGameStatistics endOfGameStatistics)
-    {
-        throw new NotImplementedException();
-    }
-
-    public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
-
-
-    public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
-    public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
+    #endregion
 }
