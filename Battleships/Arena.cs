@@ -94,6 +94,8 @@ public class Arena
     /// <exception cref="LocationUnavailableException">Location provided does not have enough space for provided ship.</exception>
     public Tile[,] PlaceShip(Ship ship, TargetCoordinates targetCoordinates, TargetCoordinates direction)
     {
+        // TODO: Instead of throwing an exception, maybe return if successful or not?
+
         if (!IsInArray(targetCoordinates))
             throw new LocationUnavailableException("Provided coordinates was outside the map");
         
