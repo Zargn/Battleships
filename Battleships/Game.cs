@@ -12,9 +12,10 @@ public class Game
         await game.Run();
     }
 
-    private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
-    private const int ArenaSizeX = 10;
-    private const int ArenaSizeY = 10;
+    // private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
+    private static readonly int[] ShipLengths = {2};
+    private const int ArenaSizeX = 3;
+    private const int ArenaSizeY = 3;
     
     private CancellationTokenSource cancelSource = new CancellationTokenSource();
 
@@ -126,7 +127,7 @@ public class Game
     private void DisplayTurnResult(TurnResult turnResult, IPlayer player)
     {
         if (turnResult.ShipSunk)
-            userInterface.DisplayMessage($"{player.UserName} sunk a ship!");
+            userInterface.DisplayMessage($"{player.UserName} sunk the {turnResult.Ship.Type} {turnResult.Ship.Name}!");
         else if (turnResult.ShipHit)
             userInterface.DisplayMessage($"{player.UserName} hit a ship!");
         else
