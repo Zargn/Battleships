@@ -1,7 +1,6 @@
-﻿using System.Numerics;
-using Battleships.EventArguments;
+﻿using Battleships.EventArguments;
 using Battleships.Interfaces;
-using Battleships.objects.Enums;
+using Battleships.objects;
 
 namespace Battleships;
 
@@ -27,17 +26,7 @@ public class Game
     }
 
     public async Task Run()
-    {
-        // Todo in order:
-        // Welcome player.
-        // Let player pick game mode. vs ai, or vs remote player.
-        // Instantiate the player.
-        // Instantiate the remote/ai player.
-        // Decide who starts.
-        // PlayTurn on the starting player.
-        // PlayTurn on the other player.
-        // Repeat last two steps until one player is defeated or something breaks.
-
+    { 
         var gameLoopTask = InitializeGame();
         await gameLoopTask;
     }
@@ -78,14 +67,14 @@ public class Game
             try
             {
                 var player = GetIPlayer(players, startingPlayerTurn);
+                
+                userInterface.DisplayMessage($"{player.UserName}'s turn!");
+                
                 var turnResult = await player.PlayTurnAsync(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
                 
                 UpdateVisualPlayingField(new []{player1, player2});
-                
-                if (turnResult.ShipSunkDEPRECATED)
-                    userInterface.DisplayMessage($"{player.UserName} sunk a ship!");
-                else if (turnResult.ShipHitDEPRECATED)
-                    userInterface.DisplayMessage($"{player.UserName} hit a ship!");
+
+                DisplayTurnResult(turnResult, player);
 
                 if (turnResult.TargetPlayerDefeated)
                     break;
@@ -132,5 +121,15 @@ public class Game
         {
             userInterface.DrawTiles(player.KnownArenaTiles, player.UserName);
         }
+    }
+
+    private void DisplayTurnResult(TurnResult turnResult, IPlayer player)
+    {
+        if (turnResult.ShipSunkDEPRECATED)
+            userInterface.DisplayMessage($"{player.UserName} sunk a ship!");
+        else if (turnResult.ShipHitDEPRECATED)
+            userInterface.DisplayMessage($"{player.UserName} hit a ship!");
+        else
+            userInterface.DisplayMessage($"{player.UserName} missed!");
     }
 }
