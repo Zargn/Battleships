@@ -8,8 +8,18 @@ public class Game
 {
     public static async Task Main()
     {
-        var game = new Game(new ConsoleUserInterface());
-        await game.Run();
+        var userInterface = new ConsoleUserInterface();
+        
+        var game = new Game(userInterface);
+        while (true)
+        {
+            await game.Run();
+
+            if (!userInterface.GetYesNoAnswer("Play again?", CancellationToken.None))
+            {
+                break;
+            }
+        }
     }
 
     // private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
@@ -78,7 +88,10 @@ public class Game
                 DisplayTurnResult(turnResult, player);
 
                 if (turnResult.TargetPlayerDefeated)
+                {
+                    userInterface.DisplayMessage($"{player.UserName} wins!");
                     break;
+                }
             
                 startingPlayerTurn = !startingPlayerTurn;
             }
@@ -87,6 +100,8 @@ public class Game
                 break;
             }
         }
+        
+        // TODO: Unload players.
     }
 
     private IPlayer[] ConfigurePlayerOrder(IPlayer player1, IPlayer player2)
