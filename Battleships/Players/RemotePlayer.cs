@@ -177,7 +177,7 @@ public class RemotePlayer : IPlayer
 
     private async Task CreateGroup()
     {
-        var groupSettings = new GroupSettings(2, groupCode, "This should be the local players username or something");
+        var groupSettings = new GroupSettings(2, groupCode, "");
 
         await netClient.SendCreateGroupRequest(groupSettings);
     }
@@ -251,7 +251,7 @@ public class RemotePlayer : IPlayer
     private void HandleClientDisconnected(object? o, EventArgs args)
     {
         var reason = $"Lost connection to game server";
-        var detailedReason = $"Something caused the connection to the game server to be lost. Please check your internet connection otherwise contact the developer.";
+        var detailedReason = $"Something caused the connection to the game server to be lost. Please check your internet connection or contact the developer.";
         PlayerUnavailable?.Invoke(this, new PlayerUnavailableEventArgs(reason, detailedReason));
     }
     
@@ -268,14 +268,14 @@ public class RemotePlayer : IPlayer
 
         var turnResult = new TurnResult(hitResult.shipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated);
         
-        if (turnResult.ShipHitDEPRECATED)
-            userInterface.DisplayMessage($"{UserName} hit one of your ships!");
-        if (turnResult.ShipSunkDEPRECATED)
-            userInterface.DisplayMessage($"{UserName} sunk one of your ships!");
-        if (turnResult.TargetPlayerDefeated)
-            userInterface.DisplayMessage($"{UserName} sunk all of your ships!");
+        // if (turnResult.ShipHitDEPRECATED)
+        //     userInterface.DisplayMessage($"{UserName} hit one of your ships!");
+        // if (turnResult.ShipSunkDEPRECATED)
+        //     userInterface.DisplayMessage($"{UserName} sunk one of your ships!");
+        // if (turnResult.TargetPlayerDefeated)
+        //     userInterface.DisplayMessage($"{UserName} sunk all of your ships!");
 
-        userInterface.DrawTiles(target.KnownArenaTiles);
+        // userInterface.DrawTiles(target.KnownArenaTiles);
 
         if (hitResult.Ship?.ShipSunk == true)
             await netClient.SendPackageToAllGroupMembers(new ShipSunkPackage());

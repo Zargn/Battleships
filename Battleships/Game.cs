@@ -69,14 +69,24 @@ public class Game
 
         bool startingPlayerTurn = true;
 
+        UpdateVisualPlayingField(new []{player1, player2});
+        
         userInterface.DisplayMessage($"{GetIPlayer(players, startingPlayerTurn).UserName} starts!");
 
         while (true)
         {
             try
             {
-                var turnResult = await GetIPlayer(players, startingPlayerTurn).PlayTurnAsync(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
-            
+                var player = GetIPlayer(players, startingPlayerTurn);
+                var turnResult = await player.PlayTurnAsync(GetIPlayer(players, !startingPlayerTurn), cancelSource.Token);
+                
+                UpdateVisualPlayingField(new []{player1, player2});
+                
+                if (turnResult.ShipSunkDEPRECATED)
+                    userInterface.DisplayMessage($"{player.UserName} sunk a ship!");
+                else if (turnResult.ShipHitDEPRECATED)
+                    userInterface.DisplayMessage($"{player.UserName} hit a ship!");
+
                 if (turnResult.TargetPlayerDefeated)
                     break;
             
@@ -114,5 +124,13 @@ public class Game
     private static IPlayer GetIPlayer(IPlayer[] players, bool startingPlayer)
     {
         return startingPlayer ? players[0] : players[1];
+    }
+
+    private void UpdateVisualPlayingField(IEnumerable<IPlayer> players)
+    {
+        foreach (var player in players)
+        {
+            userInterface.DrawTiles(player.KnownArenaTiles, player.UserName);
+        }
     }
 }

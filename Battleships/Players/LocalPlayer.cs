@@ -54,7 +54,7 @@ public class LocalPlayer : IPlayer
     private void PlaceShipsManual(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         arena = new Arena(xSize, ySize);
-        userInterface.DrawTiles(arena.CurrentView);
+        userInterface.DrawTiles(arena.CurrentView, UserName);
         
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -74,7 +74,7 @@ public class LocalPlayer : IPlayer
             try
             {
                 var tiles = arena.PlaceShip(ship, placementInformation.Coordinates, placementInformation.Direction);
-                userInterface.DrawTiles(tiles);
+                userInterface.DrawTiles(tiles, UserName);
                 return;
             }
             catch (LocationUnavailableException)
@@ -91,7 +91,7 @@ public class LocalPlayer : IPlayer
             arena = new Arena(xSize, ySize);
             var tiles = arena.RandomiseShipLocations(shipLengths);
             
-            userInterface.DrawTiles(tiles);
+            userInterface.DrawTiles(tiles, UserName);
             if (!userInterface.GetYesNoAnswer("Randomise again?", cancellationToken))
                 return;
         }
@@ -101,7 +101,7 @@ public class LocalPlayer : IPlayer
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        userInterface.DrawTiles(target.KnownArenaTiles);
+        // userInterface.DrawTiles(target.KnownArenaTiles);
         
         var firingTarget = GetFiringTarget(target.KnownArenaTiles, cancellationToken);
 
@@ -116,7 +116,7 @@ public class LocalPlayer : IPlayer
         if (turnResult.TargetPlayerDefeated)
             userInterface.DisplayMessage("Player defeated!");
 
-        userInterface.DrawTiles(target.KnownArenaTiles);
+        // userInterface.DrawTiles(target.KnownArenaTiles);
         
         return turnResult;
     }
