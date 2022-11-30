@@ -7,22 +7,24 @@ namespace Battleships;
 
 public class Arena
 {
-    private Tile[,] tiles;
-    private Tile[,] outsideViewTiles;
+    private readonly Tile[,] tiles;
+    private readonly List<Ship> ships = new();
 
     public int XSize => tiles.GetLength(0);
     public int YSize => tiles.GetLength(1);
-    public event EventHandler ShipSunk;
+    public Tile[,] CurrentView { get; }
 
-    public Tile[,] CurrentView => outsideViewTiles;
+    public event EventHandler? ShipSunk;    
 
-    private List<Ship> ships = new();
-
+    
+    
     public Arena(int xSize, int ySize)
     {
         tiles = new Tile[xSize, ySize];
-        outsideViewTiles = new Tile[xSize, ySize];
+        CurrentView = new Tile[xSize, ySize];
     }
+    
+    
 
     public Tile this[TargetCoordinates targetCoordinates]
     {
@@ -172,17 +174,17 @@ public class Arena
             throw new LocationUnavailableException("Provided coordinates has been hit already!");
         
         tile.Hit = true;
-        outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].Hit = true;
+        CurrentView[targetCoordinates.X, targetCoordinates.Y].Hit = true;
         this[targetCoordinates] = tile;
 
         if (!tile.OccupiedByShip) return new HitResult(false, null);
         
-        outsideViewTiles[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = true;
+        CurrentView[targetCoordinates.X, targetCoordinates.Y].OccupiedByShip = true;
         var ship = GetShipAtCoordinates(targetCoordinates);
         ship.Health--;
         
         if (ship.ShipSunk)
-            ShipSunk.Invoke(this, EventArgs.Empty);
+            ShipSunk?.Invoke(this, EventArgs.Empty);
         
         return new HitResult(true, ship);
     }
