@@ -99,7 +99,7 @@ public class Arena
         if (!IsInArray(targetCoordinates))
             throw new LocationUnavailableException("Provided coordinates was outside the map");
         
-        if (!IsInArray(targetCoordinates + direction*ship.Length))
+        if (!IsInArray(targetCoordinates + direction*(ship.Length - 1)))
             throw new LocationUnavailableException("Provided direction and ship size resulted in ship being unable to fit inside the map.");
 
         if (SurroundingAreaContainsShips(ship.Length, targetCoordinates, direction))
