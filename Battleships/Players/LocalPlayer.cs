@@ -12,15 +12,15 @@ public class LocalPlayer : IPlayer
     private readonly IUserInterface userInterface;
 
 
-
     public StartingPlayer PlayerStartPriority => StartingPlayer.Maybe;
     public string UserName { get; private set; }
 
     public Tile[,] KnownArenaTiles => arena.CompleteView;
     public int ShipsLeft { get; private set; }
 
-    
-    
+    Tile[,] IPlayer.AllArenaTiles => arena.CompleteView;
+
+
     public LocalPlayer(IUserInterface userInterface)
     {
         this.userInterface = userInterface;
