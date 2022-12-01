@@ -17,8 +17,7 @@ public class LocalPlayer : IPlayer
 
     public Tile[,] KnownArenaTiles => arena.CompleteView;
     public int ShipsLeft { get; private set; }
-
-    Tile[,] IPlayer.AllArenaTiles => arena.CompleteView;
+    
 
 
     public LocalPlayer(IUserInterface userInterface)
@@ -140,6 +139,13 @@ public class LocalPlayer : IPlayer
     public Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken)
     {
         return Task.FromResult(arena.FireAtTile(targetCoordinates));
+    }
+    
+    
+    
+    Task<Tile[,]?> IPlayer.AllArenaTiles()
+    {
+        return Task.FromResult(arena.CurrentView);
     }
     
     
