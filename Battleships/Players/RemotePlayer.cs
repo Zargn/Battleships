@@ -31,10 +31,14 @@ public class RemotePlayer : IPlayer
     private HitResult? hitResultCache;
     private readonly SemaphoreSlim hitResultReceived = new(0, 1);
 
+    private Tile[,] allArenaTilesCache;
+    private readonly SemaphoreSlim allArenaTilesReceived = new(0, 1);
+
     public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles { get; set; }
-    public int ShipsLeft { get; private set; }
+    public int ShipsLeft { get; private set; } 
+    Tile[,]? IPlayer.AllArenaTiles => RequestEndOfGameTiles();
     
     
     
@@ -42,6 +46,13 @@ public class RemotePlayer : IPlayer
     {
         this.userInterface = userInterface;
         this.opponent = opponent;
+    }
+
+
+
+    private Tile[,]? RequestEndOfGameTiles()
+    {
+        
     }
     
     
@@ -165,9 +176,9 @@ public class RemotePlayer : IPlayer
     }
     
     #endregion
-
-
     
+    
+
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
         await hitTileCoordinatesReceived.WaitAsync(cancellationToken);
