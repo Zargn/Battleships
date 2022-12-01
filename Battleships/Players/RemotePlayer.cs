@@ -121,7 +121,7 @@ public class RemotePlayer : IPlayer
             if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();
 
-            await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode, ""));
+            await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode.ToUpper(), ""));
 
             var success = await SuccessfullyJoined();
             if (!success)
