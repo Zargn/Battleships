@@ -39,10 +39,10 @@ public class ConsoleUserInterface : IUserInterface
             for (int x = 0; x < tiles.GetLength(0); x++)
             {
                 var tile = tiles[x, y];
-                var symbol = '~';
+                var symbol = '⋅';
 
                 if (tile.Hit)
-                    symbol = 'o';
+                    symbol = 'O';
 
                 if (tile.OccupiedByShip)
                     symbol = '#';
