@@ -30,10 +30,11 @@ public class ConsoleUserInterface : IUserInterface
         StringBuilder sb = new StringBuilder();
 
         sb.AppendLine($"{username}'s board");
+        sb.AppendLine("   0 1 2 3 4 5 6 7 8 9 ");
         
         for (int y = tiles.GetLength(1) - 1; y >= 0; y--)
         {
-            sb.Append("| ");
+            sb.Append($"{y.ToString()}  ");
             
             for (int x = 0; x < tiles.GetLength(0); x++)
             {
@@ -41,7 +42,7 @@ public class ConsoleUserInterface : IUserInterface
                 var symbol = '~';
 
                 if (tile.Hit)
-                    symbol = 'O';
+                    symbol = 'o';
 
                 if (tile.OccupiedByShip)
                     symbol = '#';
@@ -53,10 +54,12 @@ public class ConsoleUserInterface : IUserInterface
                 // sb.Append($"{x}{y} ");
             }
 
-            sb.Append("|");
+            sb.Append($" {y.ToString()}");
             
             sb.AppendLine();
         }
+
+        sb.Append("   0 1 2 3 4 5 6 7 8 9 ");
 
         Console.WriteLine(sb);
     }
