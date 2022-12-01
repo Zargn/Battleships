@@ -14,7 +14,21 @@ public interface IPlayer
     public int ShipsLeft { get; }
     public bool PlayerDefeated => ShipsLeft <= 0;
     protected Tile[,] AllArenaTiles { get; }
-    public Tile[,]? EndOfGameTiles => PlayerDefeated ? AllArenaTiles : null;
+
+    /// <summary>
+    /// Get tiles including ship positions.
+    /// Returns null if both players are not defeated.
+    /// </summary>
+    /// <param name="otherPlayer">opponent player</param>
+    /// <returns>arena tiles including alive ship positions.</returns>
+    public Tile[,]? GetEndOfGameTiles(IPlayer otherPlayer)
+    {
+        if (otherPlayer.PlayerDefeated)
+            return AllArenaTiles;
+        if (PlayerDefeated)
+            return KnownArenaTiles;
+        return null;
+    }
 
     public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken);
 
