@@ -128,7 +128,7 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<ShipSunkPackage>(HandleShipSunkPackage);
         netClient.PackageBroker.SubscribeToPackage<ClientLeftGroupPackage<OnlineUserIdentification>>(HandleClientLeftGroupPackage);
         netClient.PackageBroker.SubscribeToPackage<RequestEndOfGameTilesPackage>(HandleRequestEndOfGameTilesPackage);
-        netClient.PackageBroker.SubscribeToPackage<EndOfGameTilesPackage>(HandleEndOfGameTilesPackage);
+        netClient.PackageBroker.SubscribeToPackage<ShipLocationsPackage>(HandleShipLocationsPackage);
 
         netClient.ClientDisconnected += HandleClientDisconnected;
     }
@@ -325,13 +325,31 @@ public class RemotePlayer : IPlayer
             return;
         }
 
-        await netClient.SendPackageToAllGroupMembers(new EndOfGameTilesPackage(tiles));
+        List<TargetCoordinates> locations = new();
+        
+        for (int y = 0; y < tiles.GetLength(1); y++)
+        {
+            for (int x = 0; x < tiles.GetLength(0); x++)
+            {
+                if (tiles[x, y].OccupiedByShip)
+                    locations.Add(new TargetCoordinates(x, y));
+            }
+        }
+
+        await netClient.SendPackageToAllGroupMembers(new ShipLocationsPackage(locations.ToArray()));
     }
     
-    private void HandleEndOfGameTilesPackage(object? o, PackageReceivedEventArgs args)
+    private void HandleShipLocationsPackage(object? o, PackageReceivedEventArgs args)
     {
-        var package = args.ReceivedPackage as EndOfGameTilesPackage;
-        allArenaTilesCache = package.Tiles;
+        var package = args.ReceivedPackage as ShipLocationsPackage;
+        var tiles = KnownArenaTiles;
+
+        foreach (var shipLocation in package.Locations)
+        {
+            tiles[shipLocation.X, shipLocation.Y].OccupiedByShip = true;
+        }
+
+        allArenaTilesCache = tiles;
         allArenaTilesReceived.Release();
     }
     
