@@ -13,6 +13,7 @@ public class Arena
     public int XSize => tiles.GetLength(0);
     public int YSize => tiles.GetLength(1);
     public Tile[,] CurrentView { get; }
+    public Tile[,] CompleteView => tiles;
 
     public event EventHandler? ShipSunk;    
 
