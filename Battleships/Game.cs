@@ -22,12 +22,12 @@ public class Game
         }
     }
 
-    // private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
-    private static readonly int[] ShipLengths = {2};
-    private const int ArenaSizeX = 3;
-    private const int ArenaSizeY = 3;
-    
-    private CancellationTokenSource cancelSource = new CancellationTokenSource();
+    private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
+    // private static readonly int[] ShipLengths = {2};
+    private const int ArenaSizeX = 10;
+    private const int ArenaSizeY = 10;
+
+    private CancellationTokenSource cancelSource;
 
     private IUserInterface userInterface;
 
@@ -37,7 +37,8 @@ public class Game
     }
 
     public async Task Run()
-    { 
+    {
+        cancelSource = new CancellationTokenSource();
         var gameLoopTask = InitializeGame();
         await gameLoopTask;
     }
