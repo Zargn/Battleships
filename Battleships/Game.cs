@@ -22,10 +22,10 @@ public class Game
         }
     }
 
-    private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
-    // private static readonly int[] ShipLengths = {2};
-    private const int ArenaSizeX = 10;
-    private const int ArenaSizeY = 10;
+    // private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
+    private static readonly int[] ShipLengths = {2};
+    private const int ArenaSizeX = 3;
+    private const int ArenaSizeY = 3;
 
     private CancellationTokenSource cancelSource;
 
@@ -90,6 +90,7 @@ public class Game
 
                 if (turnResult.TargetPlayerDefeated)
                 {
+                    await DisplayResultPlayingFields(player1, player2);
                     userInterface.DisplayMessage($"{player.UserName} wins!");
                     break;
                 }
@@ -138,6 +139,12 @@ public class Game
         {
             userInterface.DrawTiles(player.KnownArenaTiles, player.UserName);
         }
+    }
+
+    private async Task DisplayResultPlayingFields(IPlayer player1, IPlayer player2)
+    {
+        userInterface.DrawTiles(await player1.GetEndOfGameTiles(player2), player1.UserName);
+        userInterface.DrawTiles(await player2.GetEndOfGameTiles(player1), player2.UserName);
     }
 
     private void DisplayTurnResult(TurnResult turnResult, IPlayer player)
