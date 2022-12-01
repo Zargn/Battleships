@@ -145,7 +145,7 @@ public class LocalPlayer : IPlayer
     
     Task<Tile[,]?> IPlayer.AllArenaTiles()
     {
-        return Task.FromResult(arena.CurrentView);
+        return Task.FromResult(arena.CompleteView);
     }
     
     
