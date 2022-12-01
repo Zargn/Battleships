@@ -10,14 +10,13 @@ public interface IPlayer
 
     public StartingPlayer PlayerStartPriority { get; }
     public string UserName { get; }
-    
     public Tile[,] KnownArenaTiles { get; }
     public int ShipsLeft { get; }
     public bool PlayerDefeated => ShipsLeft <= 0;
-    
+    protected Tile[,] AllArenaTiles { get; }
+    public Tile[,]? EndOfGameTiles => PlayerDefeated ? AllArenaTiles : null;
+
     public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken);
-    
-    // public Task<FiringTarget> GetFiringTargetAsync();
 
     public Task<HitResult> HitTile(TargetCoordinates targetCoordinates, CancellationToken cancellationToken);
 
