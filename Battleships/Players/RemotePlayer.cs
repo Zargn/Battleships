@@ -120,6 +120,7 @@ public class RemotePlayer : IPlayer
     {
         netClient.PackageBroker.SubscribeToPackage<WarningPackage>(HandleWarningPackage);
         netClient.PackageBroker.SubscribeToPackage<ErrorPackage>(HandleErrorPackage);
+        netClient.PackageBroker.SubscribeToPackage<BattleshipsWarningPackage>(HandleBattleshipsWarningPackage);
         netClient.PackageBroker.SubscribeToPackage<UserNamePackage>(HandleUserNamePackage);
         netClient.PackageBroker.SubscribeToPackage<ClientJoinedGroupPackage<OnlineUserIdentification>>(HandleJoinedGroupPackage);
         netClient.PackageBroker.SubscribeToPackage<HitTilePackage>(HandleHitTilePackage);
@@ -127,6 +128,7 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<ShipSunkPackage>(HandleShipSunkPackage);
         netClient.PackageBroker.SubscribeToPackage<ClientLeftGroupPackage<OnlineUserIdentification>>(HandleClientLeftGroupPackage);
         netClient.PackageBroker.SubscribeToPackage<RequestEndOfGameTilesPackage>(HandleRequestEndOfGameTilesPackage);
+        netClient.PackageBroker.SubscribeToPackage<EndOfGameTilesPackage>(HandleEndOfGameTilesPackage);
 
         netClient.ClientDisconnected += HandleClientDisconnected;
     }
@@ -254,6 +256,16 @@ public class RemotePlayer : IPlayer
         errorReceived.Release();
     }
 
+    private void HandleBattleshipsWarningPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var package = args.ReceivedPackage as BattleshipsWarningPackage;
+        
+        // Todo: Maybe add more detailed warning support with type or similar?
+        
+        userInterface.DisplayError($"[Unknown] {package.Message}");
+        warningReceived.Release();
+    }
+
     private void HandleUserNamePackage(object? o, PackageReceivedEventArgs args)
     {
         var package = args.ReceivedPackage as UserNamePackage;
@@ -309,7 +321,7 @@ public class RemotePlayer : IPlayer
         {
             var message =
                 "Player did not accept request for complete view of their arena. They do not recognise your defeat.";
-            await netClient.SendPackageToAllGroupMembers(new BattleShipsWarningPackage(message));
+            await netClient.SendPackageToAllGroupMembers(new BattleshipsWarningPackage(message));
             return;
         }
 
@@ -318,7 +330,9 @@ public class RemotePlayer : IPlayer
     
     private void HandleEndOfGameTilesPackage(object? o, PackageReceivedEventArgs args)
     {
-        
+        var package = args.ReceivedPackage as EndOfGameTilesPackage;
+        allArenaTilesCache = package.Tiles;
+        allArenaTilesReceived.Release();
     }
     
     #endregion
