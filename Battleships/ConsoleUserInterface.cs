@@ -139,7 +139,8 @@ public class ConsoleUserInterface : IUserInterface
 
     public IPAddress GetIpAddress(CancellationToken cancellationToken)
     {
-        return IPAddress.Parse("192.168.1.228");
+        // return IPAddress.Parse("192.168.1.228");
+        return IPAddress.Parse("90.226.3.160");
         Console.WriteLine("Please enter server ip address: (0-255.0-255.0-255.0-255)");
         while (true)
         {
@@ -162,7 +163,7 @@ public class ConsoleUserInterface : IUserInterface
             if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();
             
-            var input = Console.ReadLine();
+            var input = Console.ReadLine().ToLower();
             if (input == null)
             {
                 Console.WriteLine("Please enter one of the following: (North, East, South, West)");
