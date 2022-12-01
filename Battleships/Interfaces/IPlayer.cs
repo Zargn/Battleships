@@ -13,7 +13,7 @@ public interface IPlayer
     public Tile[,] KnownArenaTiles { get; }
     public int ShipsLeft { get; }
     public bool PlayerDefeated => ShipsLeft <= 0;
-    protected Tile[,] AllArenaTiles { get; }
+    protected Tile[,]? AllArenaTiles { get; }
 
     /// <summary>
     /// Get tiles including ship positions.
