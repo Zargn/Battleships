@@ -2,11 +2,11 @@
 
 namespace Battleships.objects.networking;
 
-public class BattleShipsWarningPackage : Package
+public class BattleshipsWarningPackage : Package
 {
     public string Message { get; }
 
-    public BattleShipsWarningPackage(string message)
+    public BattleshipsWarningPackage(string message)
     {
         Message = message;
     }
