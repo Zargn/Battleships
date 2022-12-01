@@ -31,17 +31,21 @@ public class RemotePlayer : IPlayer
     private HitResult? hitResultCache;
     private readonly SemaphoreSlim hitResultReceived = new(0, 1);
 
-    private Tile[,] allArenaTilesCache;
+    private Tile[,]? allArenaTilesCache;
     private readonly SemaphoreSlim allArenaTilesReceived = new(0, 1);
 
     public StartingPlayer PlayerStartPriority { get; private set; }
     public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles { get; set; }
-    public int ShipsLeft { get; private set; } 
-    Tile[,]? IPlayer.AllArenaTiles => RequestEndOfGameTiles();
+    public int ShipsLeft { get; private set; }
     
-    
-    
+    Task<Tile[,]?> IPlayer.AllArenaTiles()
+    {
+        return RequestEndOfGameTiles();
+    }
+
+
+
     public RemotePlayer(IUserInterface userInterface, IPlayer opponent)
     {
         this.userInterface = userInterface;
@@ -50,9 +54,14 @@ public class RemotePlayer : IPlayer
 
 
 
-    private Tile[,]? RequestEndOfGameTiles()
+    private async Task<Tile[,]?> RequestEndOfGameTiles()
     {
-        
+        await netClient.SendPackageToAllGroupMembers(new RequestEndOfGameTilesPackage());
+        if (!await ReceivedWithOutErrors(allArenaTilesReceived))
+            return null;
+        var cache = allArenaTilesCache;
+        allArenaTilesCache = null;
+        return cache;
     }
     
     
@@ -117,6 +126,7 @@ public class RemotePlayer : IPlayer
         netClient.PackageBroker.SubscribeToPackage<HitResultPackage>(HandleHitResultPackage);
         netClient.PackageBroker.SubscribeToPackage<ShipSunkPackage>(HandleShipSunkPackage);
         netClient.PackageBroker.SubscribeToPackage<ClientLeftGroupPackage<OnlineUserIdentification>>(HandleClientLeftGroupPackage);
+        netClient.PackageBroker.SubscribeToPackage<RequestEndOfGameTilesPackage>(HandleRequestEndOfGameTilesPackage);
 
         netClient.ClientDisconnected += HandleClientDisconnected;
     }
@@ -134,7 +144,7 @@ public class RemotePlayer : IPlayer
 
             await netClient.SendJoinGroupRequest(new GroupSettings(0, targetCode.ToUpper(), ""));
 
-            var success = await SuccessfullyJoined();
+            var success = await ReceivedWithOutErrors(userInGroup);
             if (!success)
                 continue;
             
@@ -145,14 +155,16 @@ public class RemotePlayer : IPlayer
             return;
         }
     }
-
-    private async Task<bool> SuccessfullyJoined()
-    {
-        var waitForUserInGroup = userInGroup.WaitAsync();
-        await Task.WhenAny(waitForUserInGroup, errorReceived.WaitAsync(), warningReceived.WaitAsync());
-        return waitForUserInGroup.IsCompleted;
-    }
     
+    
+    
+    private async Task<bool> ReceivedWithOutErrors(SemaphoreSlim packageSignal)
+    {
+        var waitForSignal = packageSignal.WaitAsync();
+        await Task.WhenAny(waitForSignal, errorReceived.WaitAsync(), warningReceived.WaitAsync());
+        return waitForSignal.IsCompleted;
+    }
+
 
 
     private async Task CreateMode(CancellationToken cancellationToken)
@@ -288,6 +300,25 @@ public class RemotePlayer : IPlayer
         var reason = $"Lost connection to game server";
         var detailedReason = $"Something caused the connection to the game server to be lost. Please check your internet connection or contact the developer.";
         PlayerUnavailable?.Invoke(this, new PlayerUnavailableEventArgs(reason, detailedReason));
+    }
+
+    private async void HandleRequestEndOfGameTilesPackage(object? o, PackageReceivedEventArgs args)
+    {
+        var tiles = await opponent.GetEndOfGameTiles(this);
+        if (tiles == null)
+        {
+            var message =
+                "Player did not accept request for complete view of their arena. They do not recognise your defeat.";
+            await netClient.SendPackageToAllGroupMembers(new BattleShipsWarningPackage(message));
+            return;
+        }
+
+        await netClient.SendPackageToAllGroupMembers(new EndOfGameTilesPackage(tiles));
+    }
+    
+    private void HandleEndOfGameTilesPackage(object? o, PackageReceivedEventArgs args)
+    {
+        
     }
     
     #endregion
