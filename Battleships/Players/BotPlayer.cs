@@ -14,17 +14,20 @@ public class BotPlayer : IPlayer
     {
         arena = new Arena(xSize, ySize);
         arena.RandomiseShipLocations(shipLengths);
+
+        ShipsLeft = shipLengths.Length;
+        arena.ShipSunk += HandleShipSunkEvent;
         
         return Task.CompletedTask;
     }
 
     public StartingPlayer PlayerStartPriority => StartingPlayer.Maybe;
     public string UserName => "Ai";
-    public Tile[,] KnownArenaTiles { get; }
-    public int ShipsLeft { get; }
+    public Tile[,] KnownArenaTiles => arena.CurrentView;
+    public int ShipsLeft { get; private set; }
     Task<Tile[,]?> IPlayer.AllArenaTiles()
     {
-        throw new NotImplementedException();
+        return Task.FromResult(arena.CompleteView);
     }
 
     public Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
@@ -45,4 +48,9 @@ public class BotPlayer : IPlayer
     public event EventHandler<PlayerUnavailableEventArgs>? PlayerUnavailable;
     public event EventHandler<PlayerDefeatedEventArgs>? PlayerDefeatedDEPRECATED;
     public event EventHandler<ShipSunkEventArgs>? ShipSunkDEPRECATED;
+    
+    private void HandleShipSunkEvent(object? o, EventArgs e)
+    {
+        ShipsLeft--;
+    }
 }
