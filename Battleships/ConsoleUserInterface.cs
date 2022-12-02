@@ -13,13 +13,15 @@ public class ConsoleUserInterface : IUserInterface
     public IPlayer GetPlayer1()
     {
         Console.WriteLine("Make player type selection possible...");
-        player1 = new LocalPlayer(this);
+        // player1 = new LocalPlayer(this);
+        player1 = new BotPlayer();
         return player1;
     }
 
     public IPlayer GetPlayer2()
     {
         Console.WriteLine("Make player type selection possible...");
+        return new BotPlayer();
         return new RemotePlayer(this, player1);
     }
 
