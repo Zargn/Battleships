@@ -9,10 +9,10 @@
 
     <ItemGroup>
       <Reference Include="ForwardingServer">
-        <HintPath>..\..\Unnamed Network Plugin\ForwardingServer\bin\Release\net6.0\ForwardingServer.dll</HintPath>
+        <HintPath>..\ForwardingServer.dll</HintPath>
       </Reference>
       <Reference Include="Unnamed Networking Plugin">
-        <HintPath>..\..\Unnamed Network Plugin\Unnamed Networking Plugin\bin\Release\net6.0\Unnamed Networking Plugin.dll</HintPath>
+        <HintPath>..\Unnamed Networking Plugin.dll</HintPath>
       </Reference>
     </ItemGroup>
 
