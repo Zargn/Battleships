@@ -8,20 +8,19 @@ namespace Battleships.Players;
 public class BotPlayer : IPlayer
 {
     private Arena? arena;
-    private BattleshipsAi battleshipsAi;
-
-    public BotPlayer()
-    {
-        battleshipsAi = new BattleshipsAi();
-    }
+    private BattleshipsAi? battleshipsAi;
+    
     
     public Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         arena = new Arena(xSize, ySize);
         arena.RandomiseShipLocations(shipLengths);
 
+        battleshipsAi = new BattleshipsAi(xSize, ySize);
+        
         ShipsLeft = shipLengths.Length;
         arena.ShipSunk += HandleShipSunkEvent;
+        arena.ShipSunk += battleshipsAi.HandleShipSunkEvent;
         
         return Task.CompletedTask;
     }
@@ -37,8 +36,7 @@ public class BotPlayer : IPlayer
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        var targetCoordinates = battleshipsAi.CalculateNextShot();
-        var hitResult = await target.HitTile(targetCoordinates, cancellationToken);
+        var hitResult = await battleshipsAi.PlayTurn(target, cancellationToken);
         var turnResult = new TurnResult(hitResult.ShipHit, hitResult.Ship?.Health <= 0, target.PlayerDefeated, hitResult.Ship);
         return turnResult;
     }
