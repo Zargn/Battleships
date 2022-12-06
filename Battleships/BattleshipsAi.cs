@@ -13,6 +13,8 @@ public class BattleshipsAi
     private int yMult = 1;
     
     private bool ShipTargeted { get; set; }
+    private TargetCoordinates? ShipHitCoordinate { get; set; }
+    private TargetCoordinates? ShipDirection { get; set; }
     private HashSet<int> shipHits;
 
     public BattleshipsAi(int arenaXSize, int arenaYSize)
@@ -44,15 +46,15 @@ public class BattleshipsAi
     {
         if (ShipTargeted)
         {
-            
+            return await FireTowardsShipArea(targetPlayer, cancellationToken);
         }
         else
         {
-            return FireAtRandomTile(targetPlayer, cancellationToken);
+            return await FireAtRandomTile(targetPlayer, cancellationToken);
         }
     }
 
-    private HitResult FireAtRandomTile(IPlayer targetPlayer, CancellationToken cancellationToken)
+    private async Task<HitResult> FireAtRandomTile(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
         while (true)
         {
@@ -63,8 +65,15 @@ public class BattleshipsAi
 
             if (AdjacentToShip(targetLocation, targetPlayer.KnownArenaTiles))
                 continue;
-            
-            
+
+            var hitResult = await ShootAtTarget(targetPlayer, targetLocation, cancellationToken);
+
+            if (hitResult.ShipHit)
+            {
+                ShipHitCoordinate = targetLocation;
+            }
+
+            return hitResult;
         }
     }
 
@@ -97,5 +106,18 @@ public class BattleshipsAi
     private int GetCoordinateHash(TargetCoordinates value)
     {
         return value.X * xMult + value.Y * yMult;
+    }
+
+    private async Task<HitResult> ShootAtTarget(IPlayer targetPlayer, TargetCoordinates coordinates,
+        CancellationToken cancellationToken)
+    {
+        return await targetPlayer.HitTile(coordinates, cancellationToken);
+    }
+
+
+
+    private async Task<HitResult> FireTowardsShipArea(IPlayer targetPlayer, CancellationToken cancellationToken)
+    {
+        
     }
 }
