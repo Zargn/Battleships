@@ -93,6 +93,12 @@ public class BattleshipsAi
         {
             for (var x = 0; x < 3; x++)
             {
+                if (!IsInArray(searchCoordinate))
+                {
+                    searchCoordinate.X++;
+                    continue;
+                }
+                
                 if (!knownTiles[searchCoordinate.X, searchCoordinate.Y].OccupiedByShip)
                 {
                     searchCoordinate.X++;
@@ -137,16 +143,62 @@ public class BattleshipsAi
 
     private async Task<HitResult> FireToFindDirection(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
-        var startIndex = Random.Shared.Next(4);
+        var directionIndex = Random.Shared.Next(4);
         
         for (var i = 0; i < 4; i++)
         {
+            if (ShipHitCoordinate == null)
+                throw new NullReferenceException("BattleshipsAi.ShipHitCoordinate was null but the ai still tried to use it.");
             
+            var searchCoordinate = (TargetCoordinates) (ShipHitCoordinate + TargetCoordinates.Directions[directionIndex]);
+
+            if (!IsInArray(searchCoordinate))
+            {
+                directionIndex = NextDirectionIndex(directionIndex);
+                continue;
+            }
+
+            if (targetPlayer.KnownArenaTiles[searchCoordinate.X, searchCoordinate.Y].Hit)
+            {
+                directionIndex = NextDirectionIndex(directionIndex);
+                continue;
+            }
+
+            if (AdjacentToShip(searchCoordinate, targetPlayer.KnownArenaTiles))
+            { 
+                directionIndex = NextDirectionIndex(directionIndex); 
+                continue;
+            }
+
+            var hitResult = await targetPlayer.HitTile(searchCoordinate, cancellationToken);
+
+            if (hitResult.ShipHit)
+            {
+                ShipDirection = TargetCoordinates.Directions[directionIndex];
+            }
+
+            return hitResult;
         }
+
+        throw new Exception(
+            "BattleshipsAi.FireToFindDirection: No available target was found around the last ship hit.");
+    }
+
+    private static int NextDirectionIndex(int directionIndex)
+    {
+        directionIndex++;
+        if (directionIndex >= 4)
+            directionIndex = 0;
+        return directionIndex;
     }
 
     private async Task<HitResult> FireBasedOnDirection(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
         
+    }
+    
+    private bool IsInArray(TargetCoordinates c)
+    {
+        return c.X >= 0 && c.X < arenaXSize && c.Y >= 0 && c.Y < arenaYSize;
     }
 }
