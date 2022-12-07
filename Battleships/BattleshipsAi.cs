@@ -53,6 +53,8 @@ public class BattleshipsAi
             return await FireAtRandomTile(targetPlayer, cancellationToken);
         }
     }
+    
+    
 
     private async Task<HitResult> FireAtRandomTile(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
@@ -91,13 +93,20 @@ public class BattleshipsAi
         {
             for (var x = 0; x < 3; x++)
             {
-                searchCoordinate.X++;
-                if (!knownTiles[searchCoordinate.X, searchCoordinate.Y].OccupiedByShip) 
+                if (!knownTiles[searchCoordinate.X, searchCoordinate.Y].OccupiedByShip)
+                {
+                    searchCoordinate.X++;
                     continue;
+                }
                 
                 if (!shipHits.Contains(GetCoordinateHash(searchCoordinate)))
                     return true;
+                
+                searchCoordinate.X++;
             }
+
+            searchCoordinate.X -= 3;
+            searchCoordinate.Y++;
         }
 
         return false;
@@ -117,6 +126,26 @@ public class BattleshipsAi
 
 
     private async Task<HitResult> FireTowardsShipArea(IPlayer targetPlayer, CancellationToken cancellationToken)
+    {
+        if (ShipDirection == null)
+        {
+            return await FireToFindDirection(targetPlayer, cancellationToken);
+        }
+        
+        return await FireBasedOnDirection(targetPlayer, cancellationToken);
+    }
+
+    private async Task<HitResult> FireToFindDirection(IPlayer targetPlayer, CancellationToken cancellationToken)
+    {
+        var startIndex = Random.Shared.Next(4);
+        
+        for (var i = 0; i < 4; i++)
+        {
+            
+        }
+    }
+
+    private async Task<HitResult> FireBasedOnDirection(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
         
     }
