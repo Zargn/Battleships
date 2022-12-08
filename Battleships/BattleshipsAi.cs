@@ -62,10 +62,8 @@ public class BattleshipsAi
         {
             var targetLocation = GetRandomCoordinate();
             var targetTile = targetPlayer.KnownArenaTiles[targetLocation.X, targetLocation.Y];
-            if (targetTile.Hit)
-                continue;
 
-            if (AdjacentToShip(targetLocation, targetPlayer.KnownArenaTiles))
+            if (!IsPossibleShipLocation(targetPlayer, targetLocation))
                 continue;
 
             var hitResult = await ShootAtTarget(targetPlayer, targetLocation, cancellationToken);
@@ -73,6 +71,7 @@ public class BattleshipsAi
             if (hitResult.ShipHit)
             {
                 ShipHitCoordinate = targetLocation;
+                shipHits.Add(GetCoordinateHash(targetLocation));
             }
 
             return hitResult;
@@ -158,24 +157,19 @@ public class BattleshipsAi
                 continue;
             }
 
-            if (targetPlayer.KnownArenaTiles[searchCoordinate.X, searchCoordinate.Y].Hit)
+            if (!IsPossibleShipLocation(targetPlayer, searchCoordinate))
             {
                 directionIndex = NextDirectionIndex(directionIndex);
                 continue;
             }
 
-            if (AdjacentToShip(searchCoordinate, targetPlayer.KnownArenaTiles))
-            { 
-                directionIndex = NextDirectionIndex(directionIndex); 
-                continue;
-            }
-
             var hitResult = await targetPlayer.HitTile(searchCoordinate, cancellationToken);
 
-            if (hitResult.ShipHit)
-            {
-                ShipDirection = TargetCoordinates.Directions[directionIndex];
-            }
+            if (!hitResult.ShipHit) 
+                return hitResult;
+
+            ShipDirection = TargetCoordinates.Directions[directionIndex];
+            shipHits.Add(GetCoordinateHash(searchCoordinate));
 
             return hitResult;
         }
@@ -222,5 +216,20 @@ public class BattleshipsAi
     private bool IsInArray(TargetCoordinates c)
     {
         return c.X >= 0 && c.X < arenaXSize && c.Y >= 0 && c.Y < arenaYSize;
+    }
+
+    private bool IsPossibleShipLocation(IPlayer targetPlayer, TargetCoordinates targetCoordinates)
+    {
+        if (targetPlayer.KnownArenaTiles[targetCoordinates.X, targetCoordinates.Y].Hit)
+        {
+            return false;
+        }
+
+        if (AdjacentToShip(targetCoordinates, targetPlayer.KnownArenaTiles))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
