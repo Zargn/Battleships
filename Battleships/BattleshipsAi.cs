@@ -12,7 +12,7 @@ public class BattleshipsAi
     private int xMult = 1;
     private int yMult = 1;
     
-    private bool ShipTargeted { get; set; }
+    // private bool ShipTargeted { get; set; }
     private TargetCoordinates? ShipHitCoordinate { get; set; }
     private TargetCoordinates? ShipDirection { get; set; }
     private HashSet<int> shipHits;
@@ -35,23 +35,36 @@ public class BattleshipsAi
     }
     
     // TODO: Probably not needed now that I already get the hitResult here.
-    public void HandleShipSunkEvent(object? o, EventArgs e)
+    public void ResetShipSearchInformation()
     {
-        ShipTargeted = false;
+        ShipHitCoordinate = null;
+        ShipDirection = null;
+        shipHits.Clear();
     }
     
     
     
     public async Task<HitResult> PlayTurn(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
-        if (ShipTargeted)
+        await Task.Delay(500, cancellationToken);
+
+        HitResult hitresult;
+
+        if (ShipHitCoordinate != null)
         {
-            return await FireTowardsShipArea(targetPlayer, cancellationToken);
+            hitresult = await FireTowardsShipArea(targetPlayer, cancellationToken);
         }
         else
         {
-            return await FireAtRandomTile(targetPlayer, cancellationToken);
+            hitresult = await FireAtRandomTile(targetPlayer, cancellationToken);
         }
+
+        if (hitresult.Ship?.ShipSunk == true)
+        {
+            ResetShipSearchInformation();
+        }
+
+        return hitresult;
     }
     
     
@@ -188,9 +201,20 @@ public class BattleshipsAi
 
     private async Task<HitResult> FireBasedOnDirection(IPlayer targetPlayer, CancellationToken cancellationToken)
     {
+        var targetCoordinate = GetNextValidCoordinateInShipDirection(targetPlayer);
         
+        var hitResult = await targetPlayer.HitTile(targetCoordinate, cancellationToken);
+
+        if (!hitResult.ShipHit) 
+            return hitResult;
+        
+        shipHits.Add(GetCoordinateHash(targetCoordinate));
+
+        return hitResult;
     }
 
+    
+    
     private TargetCoordinates GetNextValidCoordinateInShipDirection(IPlayer targetPlayer)
     {
         if (ShipHitCoordinate == null)
@@ -199,20 +223,51 @@ public class BattleshipsAi
         if (ShipDirection == null)
             throw new NullReferenceException("BattleshipsAi.ShipDirection was null but the ai still tried to use it.");
         
-        var searchCoordinate = (TargetCoordinates) ShipHitCoordinate;
+        var searchCoordinates = (TargetCoordinates) ShipHitCoordinate;
         var searchDirection = (TargetCoordinates) ShipDirection;
         
+        
+        if (SearchInDirection(targetPlayer, ref searchCoordinates, searchDirection)) 
+            return searchCoordinates;
+        
+        
+        searchCoordinates = (TargetCoordinates) ShipHitCoordinate;
+        searchDirection *= -1;
+        
+        if (SearchInDirection(targetPlayer, ref searchCoordinates, searchDirection)) 
+            return searchCoordinates;
+
+        throw new Exception(
+            "BattleshipsAi.GetNextValidCoordinateInShipDirection: Could not find a possible ship tile in the directions of the ship.");
+    }
+
+    
+    
+    private bool SearchInDirection(IPlayer targetPlayer, ref TargetCoordinates searchCoordinates, TargetCoordinates searchDirection)
+    {
         while (true)
         {
-            searchCoordinate += searchDirection;
+            searchCoordinates += searchDirection;
 
-            if (!IsInArray(searchCoordinate))
+            if (!IsInArray(searchCoordinates))
                 break;
 
-            
+
+            var tile = targetPlayer.KnownArenaTiles[searchCoordinates.X, searchCoordinates.Y];
+            if (tile.Hit && tile.OccupiedByShip)
+                continue;
+
+            if (IsPossibleShipLocation(targetPlayer, searchCoordinates))
+            {
+                return true;
+            }
+
+            break;
         }
+
+        return false;
     }
-    
+
     private bool IsInArray(TargetCoordinates c)
     {
         return c.X >= 0 && c.X < arenaXSize && c.Y >= 0 && c.Y < arenaYSize;
