@@ -196,6 +196,28 @@ public class BattleshipsAi
     {
         
     }
+
+    private TargetCoordinates GetNextValidCoordinateInShipDirection(IPlayer targetPlayer)
+    {
+        if (ShipHitCoordinate == null)
+            throw new NullReferenceException("BattleshipsAi.ShipHitCoordinate was null but the ai still tried to use it.");
+        
+        if (ShipDirection == null)
+            throw new NullReferenceException("BattleshipsAi.ShipDirection was null but the ai still tried to use it.");
+        
+        var searchCoordinate = (TargetCoordinates) ShipHitCoordinate;
+        var searchDirection = (TargetCoordinates) ShipDirection;
+        
+        while (true)
+        {
+            searchCoordinate += searchDirection;
+
+            if (!IsInArray(searchCoordinate))
+                break;
+
+            
+        }
+    }
     
     private bool IsInArray(TargetCoordinates c)
     {
