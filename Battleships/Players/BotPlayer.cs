@@ -9,6 +9,12 @@ public class BotPlayer : IPlayer
 {
     private Arena? arena;
     private BattleshipsAi? battleshipsAi;
+
+    private static readonly string[] aiNames =
+    {
+        "Bob", "Karl", "Felix", "James", "Mary", "Robert", "Patricia", "John", "Jennifer", "Michael",
+        "Linda", "David", "Elizabeth", "William", "Barbara", "Richard", "Susan", "Joseph", "Jessica"
+    };
     
     
     public Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
@@ -21,11 +27,13 @@ public class BotPlayer : IPlayer
         ShipsLeft = shipLengths.Length;
         arena.ShipSunk += HandleShipSunkEvent;
 
+        UserName = $"Ai {aiNames[Random.Shared.Next(aiNames.Length)]}";
+
         return Task.CompletedTask;
     }
 
     public StartingPlayer PlayerStartPriority => StartingPlayer.Maybe;
-    public string UserName => "Ai";
+    public string UserName { get; private set; }
     public Tile[,] KnownArenaTiles => arena.CurrentView;
     public int ShipsLeft { get; private set; }
     Task<Tile[,]?> IPlayer.AllArenaTiles()
