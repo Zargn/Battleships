@@ -20,8 +20,7 @@ public class BotPlayer : IPlayer
         
         ShipsLeft = shipLengths.Length;
         arena.ShipSunk += HandleShipSunkEvent;
-        arena.ShipSunk += battleshipsAi.HandleShipSunkEvent;
-        
+
         return Task.CompletedTask;
     }
 
