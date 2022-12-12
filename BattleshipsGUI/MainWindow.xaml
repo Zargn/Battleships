@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:BattleshipsGUI"
         mc:Ignorable="d"
         Title="BattleShips" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        <StackPanel>
+                <Label>Hello</Label>
+                <Button>Button</Button>
+        </StackPanel>
 </Window>
