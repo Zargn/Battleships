@@ -6,21 +6,21 @@ namespace Battleships;
 
 public class Game
 {
-    public static async Task Main()
-    {
-        var userInterface = new ConsoleUserInterface();
-        
-        var game = new Game(userInterface);
-        while (true)
-        {
-            await game.Run();
-
-            if (!userInterface.GetYesNoAnswer("Play again?", CancellationToken.None))
-            {
-                break;
-            }
-        }
-    }
+    // public static async Task Main()
+    // {
+    //     var userInterface = new ConsoleUserInterface();
+    //     
+    //     var game = new Game(userInterface);
+    //     while (true)
+    //     {
+    //         await game.Run();
+    //
+    //         if (!userInterface.GetYesNoAnswer("Play again?", CancellationToken.None))
+    //         {
+    //             break;
+    //         }
+    //     }
+    // }
 
     private static readonly int[] ShipLengths = {2, 2, 3, 4, 5};
     // private static readonly int[] ShipLengths = {2};
