@@ -2,6 +2,7 @@
 using System.Text;
 using Battleships.Interfaces;
 using Battleships.objects;
+using Battleships.objects.networking;
 using Battleships.Players;
 
 namespace Battleships;
@@ -28,7 +29,7 @@ public class ConsoleUserInterface : IUserInterface
     {
         if (GetYesNoAnswer("Do you want to play multiplayer?", CancellationToken.None))
         {
-            return new RemotePlayer(this, player1);
+            return new RemotePlayer(this, player1, new ConsoleLogger(), new JsonSerializerAdapter());
         }
         
         return new BotPlayer();
