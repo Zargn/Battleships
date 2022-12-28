@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using Battleships.objects;
+using BattleshipsCore.objects;
 
-namespace Battleships.Interfaces;
+namespace BattleshipsCore.Interfaces;
 
 public interface IUserInterface
 {

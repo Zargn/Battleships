@@ -1,6 +1,6 @@
-﻿using Battleships.objects.Enums;
+﻿using BattleshipsCore.objects.Enums;
 
-namespace Battleships.objects;
+namespace BattleshipsCore.objects;
 
 public class Ship
 {

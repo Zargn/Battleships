@@ -1,4 +1,4 @@
-﻿namespace Battleships.objects;
+﻿namespace BattleshipsCore.objects;
 
 public class HitResult
 {

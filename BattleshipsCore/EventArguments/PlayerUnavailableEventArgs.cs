@@ -1,4 +1,4 @@
-﻿namespace Battleships.EventArguments;
+﻿namespace BattleshipsCore.EventArguments;
 
 public class PlayerUnavailableEventArgs : EventArgs
 {

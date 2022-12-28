@@ -1,9 +1,10 @@
 ﻿using System.Net;
 using System.Text;
-using Battleships.Interfaces;
 using Battleships.objects;
 using Battleships.objects.networking;
-using Battleships.Players;
+using BattleshipsCore.Interfaces;
+using BattleshipsCore.objects;
+using BattleshipsCore.Players;
 
 namespace Battleships;
 

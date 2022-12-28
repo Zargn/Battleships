@@ -1,8 +1,8 @@
-﻿using Battleships.EventArguments;
-using Battleships.Interfaces;
-using Battleships.objects;
+﻿using BattleshipsCore.EventArguments;
+using BattleshipsCore.Interfaces;
+using BattleshipsCore.objects;
 
-namespace Battleships;
+namespace BattleshipsCore;
 
 public class Game
 {

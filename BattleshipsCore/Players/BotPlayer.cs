@@ -1,9 +1,9 @@
-﻿using Battleships.EventArguments;
-using Battleships.Interfaces;
-using Battleships.objects;
-using Battleships.objects.Enums;
+﻿using BattleshipsCore.EventArguments;
+using BattleshipsCore.Interfaces;
+using BattleshipsCore.objects;
+using BattleshipsCore.objects.Enums;
 
-namespace Battleships.Players;
+namespace BattleshipsCore.Players;
 
 public class BotPlayer : IPlayer
 {

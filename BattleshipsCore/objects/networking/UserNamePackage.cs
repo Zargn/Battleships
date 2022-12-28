@@ -1,6 +1,6 @@
 ﻿using Unnamed_Networking_Plugin.Resources;
 
-namespace Battleships.objects.networking;
+namespace BattleshipsCore.objects.networking;
 
 public class UserNamePackage : Package
 {

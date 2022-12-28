@@ -1,8 +1,9 @@
-﻿using Battleships.EventArguments;
-using Battleships.Interfaces;
-using Battleships.objects;
-using Battleships.objects.Enums;
-using Battleships.objects.networking;
+﻿using Battleships.objects.networking;
+using BattleshipsCore.EventArguments;
+using BattleshipsCore.Interfaces;
+using BattleshipsCore.objects;
+using BattleshipsCore.objects.Enums;
+using BattleshipsCore.objects.networking;
 using ForwardingClient;
 using ForwardingServer;
 using ForwardingServer.Resources;
@@ -10,7 +11,7 @@ using ForwardingServer.Resources.InformationPackages;
 using Unnamed_Networking_Plugin;
 using Unnamed_Networking_Plugin.Interfaces;
 
-namespace Battleships.Players;
+namespace BattleshipsCore.Players;
 
 public class RemotePlayer : IPlayer
 {

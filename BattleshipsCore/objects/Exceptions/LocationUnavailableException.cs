@@ -1,4 +1,4 @@
-﻿namespace Battleships.objects.Exceptions;
+﻿namespace BattleshipsCore.objects.Exceptions;
 
 public class LocationUnavailableException : Exception
 {

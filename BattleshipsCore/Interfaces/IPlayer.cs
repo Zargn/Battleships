@@ -1,8 +1,8 @@
-﻿using Battleships.EventArguments;
-using Battleships.objects;
-using Battleships.objects.Enums;
+﻿using BattleshipsCore.EventArguments;
+using BattleshipsCore.objects;
+using BattleshipsCore.objects.Enums;
 
-namespace Battleships.Interfaces;
+namespace BattleshipsCore.Interfaces;
 
 public interface IPlayer
 {

@@ -1,4 +1,4 @@
-﻿namespace Battleships.objects.Enums;
+﻿namespace BattleshipsCore.objects.Enums;
 
 public enum ShipType
 {

@@ -1,9 +1,7 @@
-﻿using Battleships.objects;
-using Battleships.objects.Exceptions;
+﻿using BattleshipsCore.objects;
+using BattleshipsCore.objects.Exceptions;
 
-
-
-namespace Battleships;
+namespace BattleshipsCore;
 
 public class Arena
 {

@@ -1,4 +1,6 @@
-﻿namespace Battleships;
+﻿using BattleshipsCore;
+
+namespace Battleships;
 
 public class ConsoleBattleships
 {

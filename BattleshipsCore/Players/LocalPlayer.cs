@@ -1,10 +1,10 @@
-﻿using Battleships.EventArguments;
-using Battleships.Interfaces;
-using Battleships.objects;
-using Battleships.objects.Enums;
-using Battleships.objects.Exceptions;
+﻿using BattleshipsCore.EventArguments;
+using BattleshipsCore.Interfaces;
+using BattleshipsCore.objects;
+using BattleshipsCore.objects.Enums;
+using BattleshipsCore.objects.Exceptions;
 
-namespace Battleships.Players;
+namespace BattleshipsCore.Players;
 
 public class LocalPlayer : IPlayer
 {

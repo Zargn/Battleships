@@ -1,7 +1,7 @@
-﻿using Battleships.Interfaces;
-using Battleships.objects;
+﻿using BattleshipsCore.Interfaces;
+using BattleshipsCore.objects;
 
-namespace Battleships;
+namespace BattleshipsCore;
 
 public class BattleshipsAi
 {
