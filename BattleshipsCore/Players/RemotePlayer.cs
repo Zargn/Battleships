@@ -8,6 +8,7 @@ using ForwardingServer;
 using ForwardingServer.Resources;
 using ForwardingServer.Resources.InformationPackages;
 using Unnamed_Networking_Plugin;
+using Unnamed_Networking_Plugin.Interfaces;
 
 namespace Battleships.Players;
 
@@ -44,12 +45,15 @@ public class RemotePlayer : IPlayer
         return RequestEndOfGameTiles();
     }
 
+    private ILogger logger;
+    private IJsonSerializer serializer;
 
-
-    public RemotePlayer(IUserInterface userInterface, IPlayer opponent)
+    public RemotePlayer(IUserInterface userInterface, IPlayer opponent, ILogger logger, IJsonSerializer serializer)
     {
         this.userInterface = userInterface;
         this.opponent = opponent;
+        this.logger = logger;
+        this.serializer = serializer;
     }
 
 
@@ -106,7 +110,7 @@ public class RemotePlayer : IPlayer
             var identification = new OnlineUserIdentification(groupCode);
             var identificationPackage = new OnlineUserIdentificationPackage(identification);
 
-            client = new FwClient(new ConsoleLogger(), new JsonSerializerAdapter(), identificationPackage);
+            client = new FwClient(logger, serializer, identificationPackage);
 
             var ip = userInterface.GetIpAddress(cancellationToken);
 
