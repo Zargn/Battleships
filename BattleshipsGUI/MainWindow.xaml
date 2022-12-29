@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattleshipsGUI"
         mc:Ignorable="d"
-        Title="BattleShips" Height="450" Width="800">
+        Title="BattleShips" Height="800" Width="1280">
         
         <Grid>
             <WrapPanel>
-                <Grid IsSharedSizeScope="True" Width="150">
+                <Grid IsSharedSizeScope="True" Margin="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition SharedSizeGroup="A" MinWidth="20" Width="Auto"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
@@ -35,21 +35,43 @@
                         <RowDefinition SharedSizeGroup="A"/>
                         <RowDefinition SharedSizeGroup="A"/>
                     </Grid.RowDefinitions>
-                        
-                    <!-- <Button Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Background="Aqua">Button 00</Button> -->
-                    <Button Background="Blue" Grid.Column="0" Grid.Row="0">  </Button>
-                    <Button Background="Blue" Grid.Column="0" Grid.Row="1">  </Button>
-                    <Button Background="Blue" Grid.Column="0" Grid.Row="2">  </Button>
+                    
+                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Source="Images/fieldBackground.png"/>
+                    
+                    <!-- <Button Background="#00000000" Grid.Column="0" Grid.Row="0" BorderBrush="#20000000" BorderThickness="2"/> -->
                 
-                    <Button Background="Blue" Grid.Column="1" Grid.Row="0">  </Button>
-                    <Button Background="Blue" Grid.Column="1" Grid.Row="1">  </Button>
-                    <Button Background="Blue" Grid.Column="1" Grid.Row="2">  </Button>
+                </Grid>
                 
-                    <Button Background="Blue" Grid.Column="2" Grid.Row="0">  </Button>
-                    <Button Background="Blue" Grid.Column="2" Grid.Row="1">  </Button>
-                    <Button Background="Blue" Grid.Column="2" Grid.Row="2">  </Button>
-                
-                    <Button Background="Blue" Grid.Column="9" Grid.Row="9">  </Button>
+                <Grid IsSharedSizeScope="True" Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="A" MinWidth="20" Width="Auto"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <!-- <ColumnDefinition Width="*"></ColumnDefinition> -->
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition SharedSizeGroup="A"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Source="Images/fieldBackground.png"/>
+                    
+                    <!-- <Button Background="#00000000" Grid.Column="0" Grid.Row="0" BorderBrush="#20000000" BorderThickness="2"/> -->
                 
                 </Grid>
             </WrapPanel>
