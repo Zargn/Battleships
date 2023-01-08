@@ -7,8 +7,10 @@
         mc:Ignorable="d"
         Title="BattleShips" Height="800" Width="1280">
         
-        <Grid>
-            <WrapPanel>
+
+    <Viewbox Stretch="Uniform">
+        <DockPanel Height="800" Width="1280">
+            <WrapPanel Orientation="Vertical" DockPanel.Dock="Left">
                 <Grid IsSharedSizeScope="True" Margin="20" Name="Player1Field">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition SharedSizeGroup="A" MinWidth="20" Width="Auto"/>
@@ -36,7 +38,7 @@
                         <RowDefinition SharedSizeGroup="A"/>
                     </Grid.RowDefinitions>
                     
-                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Source="Images/fieldBackground.png"/>
+                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
                     
                     <!-- <Button Background="#00000000" Grid.Column="0" Grid.Row="0" BorderBrush="#20000000" BorderThickness="2"/> -->
                 
@@ -69,11 +71,17 @@
                         <RowDefinition SharedSizeGroup="A"/>
                     </Grid.RowDefinitions>
                     
-                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Source="Images/fieldBackground.png"/>
+                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
                     
                     <!-- <Button Background="#00000000" Grid.Column="0" Grid.Row="0" BorderBrush="#20000000" BorderThickness="2"/> -->
                 
                 </Grid>
+                
             </WrapPanel>
-        </Grid>
+            
+            <Canvas>
+                
+            </Canvas>
+        </DockPanel>
+    </Viewbox>
 </Window>
