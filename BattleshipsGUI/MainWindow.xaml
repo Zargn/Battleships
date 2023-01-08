@@ -13,7 +13,6 @@
             <WrapPanel Orientation="Vertical" DockPanel.Dock="Left">
                 <Grid IsSharedSizeScope="True" Margin="20" Name="Player1Field">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="A" MinWidth="20" Width="Auto"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
@@ -23,9 +22,10 @@
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
-                        <!-- <ColumnDefinition Width="*"></ColumnDefinition> -->
+                        <ColumnDefinition SharedSizeGroup="A"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
                         <RowDefinition SharedSizeGroup="A"/>
                         <RowDefinition SharedSizeGroup="A"/>
                         <RowDefinition SharedSizeGroup="A"/>
@@ -38,15 +38,12 @@
                         <RowDefinition SharedSizeGroup="A"/>
                     </Grid.RowDefinitions>
                     
-                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
-                    
-                    <!-- <Button Background="#00000000" Grid.Column="0" Grid.Row="0" BorderBrush="#20000000" BorderThickness="2"/> -->
-                
+                    <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
+                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
                 </Grid>
                 
                 <Grid IsSharedSizeScope="True" Margin="20" Name="Player2Field">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="A" MinWidth="20" Width="Auto"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
@@ -56,9 +53,10 @@
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
                         <ColumnDefinition SharedSizeGroup="A"/>
-                        <!-- <ColumnDefinition Width="*"></ColumnDefinition> -->
+                        <ColumnDefinition SharedSizeGroup="A"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
                         <RowDefinition SharedSizeGroup="A"/>
                         <RowDefinition SharedSizeGroup="A"/>
                         <RowDefinition SharedSizeGroup="A"/>
@@ -71,10 +69,8 @@
                         <RowDefinition SharedSizeGroup="A"/>
                     </Grid.RowDefinitions>
                     
-                    <Image Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
-                    
-                    <!-- <Button Background="#00000000" Grid.Column="0" Grid.Row="0" BorderBrush="#20000000" BorderThickness="2"/> -->
-                
+                    <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
+                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
                 </Grid>
                 
             </WrapPanel>
