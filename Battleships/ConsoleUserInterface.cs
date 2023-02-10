@@ -156,7 +156,7 @@ public class ConsoleUserInterface : IUserInterface
     public IPAddress GetIpAddress(CancellationToken cancellationToken)
     {
         // return IPAddress.Parse("192.168.1.228");
-        return IPAddress.Parse("90.226.3.160");
+        return IPAddress.Parse("127.0.0.1");
         Console.WriteLine("Please enter server ip address: (0-255.0-255.0-255.0-255)");
         while (true)
         {
