@@ -39,7 +39,7 @@
                     </Grid.RowDefinitions>
                     
                     <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
-                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
+                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
                 </Grid>
                 
                 <Grid IsSharedSizeScope="True" Margin="20" Name="Player2Field">
@@ -70,7 +70,7 @@
                     </Grid.RowDefinitions>
                     
                     <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
-                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/>
+                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
                 </Grid>
                 
             </WrapPanel>
