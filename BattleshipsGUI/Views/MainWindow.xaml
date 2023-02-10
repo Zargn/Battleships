@@ -4,10 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattleshipsGUI"
+        xmlns:viewModels="clr-namespace:BattleshipsGUI.ViewModels"
         mc:Ignorable="d"
         Title="BattleShips" Height="800" Width="1280">
-        
-
+    
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+    
     <Viewbox Stretch="Uniform">
         <DockPanel Height="800" Width="1280">
             <WrapPanel Orientation="Vertical" DockPanel.Dock="Left">
