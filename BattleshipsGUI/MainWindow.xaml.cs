@@ -36,7 +36,7 @@ namespace BattleshipsGUI
         {
             for (var x = 0; x < 10; x++)
             {
-                for (var y = 0; y < 10; y++)
+                for (var y = 1; y < 11; y++)
                 {
                     var button = new Button();
                     grid.Children.Add(button);
@@ -49,3 +49,5 @@ namespace BattleshipsGUI
         }
     }
 }
+
+// <!-- <Image Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/> -->
