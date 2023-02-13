@@ -8,6 +8,10 @@
         mc:Ignorable="d"
         Title="BattleShips" Height="800" Width="1280">
     
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+    
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
@@ -44,6 +48,16 @@
                     
                     <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
                     <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
+                    <Image 
+                           Grid.Column="0" 
+                           Grid.Row="1" 
+                           Grid.ColumnSpan="10" 
+                           Grid.RowSpan="10" 
+                           Grid.ZIndex="1"
+                           Width="300" 
+                           Source="../Images/fieldBackground.png"
+                           Visibility="{Binding PlayerFieldClickable, Converter={StaticResource BoolToVis}}"
+                    />
                 </Grid>
                 
                 <Grid IsSharedSizeScope="True" Margin="20" Name="Player2Field">
@@ -75,12 +89,22 @@
                     
                     <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
                     <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
+                    <Image 
+                        Grid.Column="0" 
+                        Grid.Row="1" 
+                        Grid.ColumnSpan="10" 
+                        Grid.RowSpan="10" 
+                        Grid.ZIndex="1"
+                        Width="300" 
+                        Source="../Images/fieldBackground.png"
+                        Visibility="{Binding EnemyFieldClickable, Converter={StaticResource BoolToVis}}"
+                    />
                 </Grid>
                 
             </WrapPanel>
             
             <Canvas>
-                
+                <Button Click="ButtonBase_OnClick">Test</Button>
             </Canvas>
         </DockPanel>
     </Viewbox>
