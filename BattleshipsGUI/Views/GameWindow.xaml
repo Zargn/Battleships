@@ -19,86 +19,103 @@
     <Viewbox Stretch="Uniform">
         <DockPanel Height="800" Width="1280">
             <WrapPanel Orientation="Vertical" DockPanel.Dock="Left">
-                <Grid IsSharedSizeScope="True" Margin="20" Name="Player1Field">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                    </Grid.ColumnDefinitions>
+                <Grid Margin="20">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     
-                    <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
-                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
-                    <Image 
-                           Grid.Column="0" 
-                           Grid.Row="1" 
-                           Grid.ColumnSpan="10" 
-                           Grid.RowSpan="10" 
-                           Grid.ZIndex="1"
-                           Width="300" 
-                           Source="../Images/fieldBackground.png"
-                           Visibility="{Binding PlayerFieldClickable, Converter={StaticResource BoolToVis}}"
-                    />
+                    <Label  Background="Crimson" FontSize="20">Player 1 Field</Label>
+                    
+                    <Grid Grid.Row="1" IsSharedSizeScope="True" Name="Player1Field">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                        </Grid.RowDefinitions>
+                    
+                        
+                        <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
+                        <Image 
+                            Grid.Column="0" 
+                            Grid.Row="0" 
+                            Grid.ColumnSpan="10" 
+                            Grid.RowSpan="10" 
+                            Grid.ZIndex="1"
+                            Width="300" 
+                            Source="../Images/fieldBackground.png"
+                            Visibility="{Binding PlayerFieldClickable, Converter={StaticResource BoolToVis}}"
+                        />
+                    </Grid>
                 </Grid>
+
                 
-                <Grid IsSharedSizeScope="True" Margin="20" Name="Player2Field">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                        <ColumnDefinition SharedSizeGroup="A"/>
-                    </Grid.ColumnDefinitions>
+                <Grid Margin="20">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
-                        <RowDefinition SharedSizeGroup="A"/>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     
-                    <Label Grid.ColumnSpan="10" Background="Crimson" FontSize="20">Player 1 Field</Label>
-                    <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
-                    <Image 
-                        Grid.Column="0" 
-                        Grid.Row="1" 
-                        Grid.ColumnSpan="10" 
-                        Grid.RowSpan="10" 
-                        Grid.ZIndex="1"
-                        Width="300" 
-                        Source="../Images/fieldBackground.png"
-                        Visibility="{Binding EnemyFieldClickable, Converter={StaticResource BoolToVis}}"
-                    />
+                    <Label  Background="Crimson" FontSize="20">Player 2 Field</Label>
+                    
+                    <Grid Grid.Row="1" IsSharedSizeScope="True" Name="Player2Field">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition SharedSizeGroup="A"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                            <RowDefinition SharedSizeGroup="A"/>
+                        </Grid.RowDefinitions>
+                    
+                        
+                        <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="../Images/fieldBackground.png"/>
+                        <Image 
+                            Grid.Column="0" 
+                            Grid.Row="0" 
+                            Grid.ColumnSpan="10" 
+                            Grid.RowSpan="10" 
+                            Grid.ZIndex="1"
+                            Width="300" 
+                            Source="../Images/fieldBackground.png"
+                            Visibility="{Binding EnemyFieldClickable, Converter={StaticResource BoolToVis}}"
+                        />
+                    </Grid>
                 </Grid>
                 
             </WrapPanel>
