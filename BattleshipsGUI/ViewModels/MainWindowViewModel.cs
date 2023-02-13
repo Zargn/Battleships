@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using BattleshipsCore;
 using BattleshipsCore.Interfaces;
 using BattleshipsCore.objects;
 
@@ -10,6 +11,13 @@ namespace BattleshipsGUI.ViewModels;
 
 public class MainWindowViewModel : IUserInterface, INotifyPropertyChanged
 {
+    public MainWindowViewModel()
+    {
+        game = new Game(this);
+    }
+    
+    private Game game;
+    
     private bool playerFieldClickable;
     private bool enemyFieldClickable;
     public bool PlayerFieldClickable
