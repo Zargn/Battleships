@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using BattleshipsGUI.ViewModels;
 
 namespace BattleshipsGUI
 {
@@ -42,12 +32,19 @@ namespace BattleshipsGUI
                     grid.Children.Add(button);
                     button.SetValue(Grid.RowProperty, y);
                     button.SetValue(Grid.ColumnProperty, x);
-                    button.BorderBrush = new SolidColorBrush();
+                    button.BorderBrush = new SolidColorBrush(Colors.DimGray);
                     button.Background = new SolidColorBrush();
                 }
             }
         }
+
+        private bool t;
+        
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            (DataContext as MainWindowViewModel).PlayerFieldClickable = t;
+            (DataContext as MainWindowViewModel).EnemyFieldClickable = !t;
+            t = !t;
+        }
     }
 }
-
-// <!-- <Image Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="10" Width="300" Source="Images/fieldBackground.png"/> -->
