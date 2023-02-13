@@ -13,7 +13,7 @@
     </Window.Resources>
     
     <Window.DataContext>
-        <viewModels:MainWindowViewModel />
+        <viewModels:GameWindowViewModel />
     </Window.DataContext>
     
     <Viewbox Stretch="Uniform">

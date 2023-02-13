@@ -42,8 +42,8 @@ namespace BattleshipsGUI
         
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            (DataContext as MainWindowViewModel).PlayerFieldClickable = t;
-            (DataContext as MainWindowViewModel).EnemyFieldClickable = !t;
+            (DataContext as GameWindowViewModel).PlayerFieldClickable = t;
+            (DataContext as GameWindowViewModel).EnemyFieldClickable = !t;
             t = !t;
         }
     }

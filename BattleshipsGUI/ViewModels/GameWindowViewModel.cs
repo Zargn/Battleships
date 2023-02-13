@@ -9,9 +9,9 @@ using BattleshipsCore.objects;
 
 namespace BattleshipsGUI.ViewModels;
 
-public class MainWindowViewModel : IUserInterface, INotifyPropertyChanged
+public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
 {
-    public MainWindowViewModel()
+    public GameWindowViewModel()
     {
         game = new Game(this);
     }
