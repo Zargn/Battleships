@@ -1,12 +1,41 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using BattleshipsCore.Interfaces;
 using BattleshipsCore.objects;
 
 namespace BattleshipsGUI.ViewModels;
 
-public class MainWindowViewModel : IUserInterface
+public class MainWindowViewModel : IUserInterface, INotifyPropertyChanged
 {
+    private bool playerFieldClickable;
+    private bool enemyFieldClickable;
+    public bool PlayerFieldClickable
+    {
+        get => playerFieldClickable;
+        set
+        {
+            playerFieldClickable = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool EnemyFieldClickable
+    {
+        get => enemyFieldClickable; 
+        set
+        {
+            enemyFieldClickable = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    
+    
+    
+    
     public IPlayer GetPlayer1()
     {
         throw new System.NotImplementedException();
@@ -60,5 +89,22 @@ public class MainWindowViewModel : IUserInterface
     public string GetTargetGroupCode(CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
+    }
+
+    
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }
