@@ -18,7 +18,7 @@
             </Grid.RowDefinitions>
             
             <StackPanel Margin="5">
-                <RadioButton GroupName="PlayerType">User Controlled</RadioButton>
+                <RadioButton GroupName="PlayerType" IsChecked="True">User Controlled</RadioButton>
                 <RadioButton GroupName="PlayerType">CPU Controlled</RadioButton>
             </StackPanel>
             
