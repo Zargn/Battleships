@@ -20,6 +20,9 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
     
     private bool playerFieldClickable;
     private bool enemyFieldClickable;
+    private bool player1ConfigVisible;
+    private bool player2ConfigVisible;
+    
     public bool PlayerFieldClickable
     {
         get => playerFieldClickable;
@@ -36,6 +39,26 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
         set
         {
             enemyFieldClickable = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool Player1ConfigVisible
+    {
+        get => player1ConfigVisible;
+        set
+        {
+            player1ConfigVisible = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool Player2ConfigVisible
+    {
+        get => player2ConfigVisible;
+        set
+        {
+            player2ConfigVisible = value;
             OnPropertyChanged();
         }
     }
