@@ -172,7 +172,6 @@
                             <RowDefinition Height="1*"></RowDefinition>
                         </Grid.RowDefinitions>
                 
-                
                         <Grid 
                             IsSharedSizeScope="True" 
                             Name="PreviewField" 
@@ -245,6 +244,12 @@
                                 </Label>
                             </Button>
                         </Grid>
+                        
+                        <Image 
+                            Grid.RowSpan="2"
+                            Height="350"
+                            Source="../Images/GrayRectangle.png"/>
+                        
                     </Grid>
             
 
