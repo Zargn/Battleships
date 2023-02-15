@@ -12,6 +12,14 @@
       <Resource Include="Images\fieldBackground.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
+      <None Remove="Images\whiteSquare.png" />
+      <Resource Include="Images\whiteSquare.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\GrayRectangle.png" />
+      <Resource Include="Images\GrayRectangle.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
     <ItemGroup>
