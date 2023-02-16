@@ -159,13 +159,18 @@
                         Source="../Images/whiteSquare.png"/>
             
                     <StackPanel Margin="5">
-                        <RadioButton GroupName="PlayerType" IsChecked="True">User Controlled</RadioButton>
-                        <RadioButton GroupName="PlayerType">CPU Controlled</RadioButton>
+                        <RadioButton 
+                            IsChecked="{Binding PlayerConfig.Player1UserControlled}" 
+                            GroupName="PlayerType">User Controlled</RadioButton>
+                        <RadioButton 
+                            IsChecked="{Binding PlayerConfig.Player1CpuControlled}"
+                            GroupName="PlayerType">CPU Controlled</RadioButton>
                     </StackPanel>
             
                     <Grid
                         Grid.Row="1"
-                        Margin="10, 5, 10, 5">
+                        Margin="10, 5, 10, 5"
+                        Visibility="{Binding PlayerConfig.Player1UserControlled, Converter={StaticResource BoolToVis}}">
                 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="10*"></RowDefinition>
@@ -245,10 +250,10 @@
                             </Button>
                         </Grid>
                         
-                        <Image 
-                            Grid.RowSpan="2"
-                            Height="350"
-                            Source="../Images/GrayRectangle.png"/>
+                        <!-- <Image  -->
+                        <!--     Grid.RowSpan="2" -->
+                        <!--     Height="350" -->
+                        <!--     Source="../Images/GrayRectangle.png"/> -->
                         
                     </Grid>
             
