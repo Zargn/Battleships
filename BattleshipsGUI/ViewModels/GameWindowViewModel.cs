@@ -14,14 +14,19 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
     public GameWindowViewModel()
     {
         game = new Game(this);
+        PlayerConfig = new PlayerConfig();
     }
     
     private Game game;
     
     private bool playerFieldClickable;
     private bool enemyFieldClickable;
-    private bool player1ConfigVisible;
+    private bool player1ConfigVisible = true;
     private bool player2ConfigVisible;
+
+
+    public PlayerConfig PlayerConfig { get; set; }
+    
     
     public bool PlayerFieldClickable
     {
