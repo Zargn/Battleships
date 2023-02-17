@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using BattleshipsCore;
 using BattleshipsCore.Interfaces;
 using BattleshipsCore.objects;
@@ -51,12 +53,12 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
 
 
 
-    public IPlayer GetPlayer1()
+    public Task<IPlayer> GetPlayer1()
     {
         return PlayerConfig.GetPlayer1();
     }
 
-    public IPlayer GetPlayer2()
+    public Task<IPlayer> GetPlayer2()
     {
         throw new System.NotImplementedException();
     }
@@ -66,17 +68,17 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
         throw new System.NotImplementedException();
     }
 
-    public string GetUsername()
+    public Task<string> GetUsername()
     {
         throw new System.NotImplementedException();
     }
 
-    public bool GetYesNoAnswer(string question, CancellationToken cancellationToken)
+    public Task<bool> GetYesNoAnswer(string question, CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
     }
 
-    public ShipPlacementInformation GetShipPlacementInformation(int shipLength, CancellationToken cancellationToken)
+    public Task<ShipPlacementInformation> GetShipPlacementInformation(int shipLength, CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
     }
@@ -91,17 +93,17 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
         throw new System.NotImplementedException();
     }
 
-    public TargetCoordinates GetTargetCoordinates(CancellationToken cancellationToken)
+    public Task<TargetCoordinates> GetTargetCoordinates(CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
     }
 
-    public IPAddress GetIpAddress(CancellationToken cancellationToken)
+    public Task<IPAddress> GetIpAddress(CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
     }
 
-    public string GetTargetGroupCode(CancellationToken cancellationToken)
+    public Task<string> GetTargetGroupCode(CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
     }

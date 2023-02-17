@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using BattleshipsCore.Interfaces;
 
 namespace BattleshipsGUI;
@@ -56,7 +57,7 @@ public class PlayerConfig : INotifyPropertyChanged
 
 
 
-    public IPlayer GetPlayer1()
+    public async Task<IPlayer> GetPlayer1()
     {
         player1ConfigVisible = true;
 
