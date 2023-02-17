@@ -1,15 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BattleshipsCore.Interfaces;
 
 namespace BattleshipsGUI;
 
 public class PlayerConfig : INotifyPropertyChanged
 {
+    private bool player1ConfigVisible;
+    private bool player2ConfigVisible;
+    
     private bool player1UserControlled = true;
     private bool player1CpuControlled;
     
+    public bool Player1ConfigVisible
+    {
+        get => player1ConfigVisible;
+        set
+        {
+            player1ConfigVisible = value;
+            OnPropertyChanged();
+        }
+    }
     
+    public bool Player2ConfigVisible
+    {
+        get => player2ConfigVisible;
+        set
+        {
+            player2ConfigVisible = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool Player1UserControlled
     {
         get => player1UserControlled;
@@ -28,6 +52,17 @@ public class PlayerConfig : INotifyPropertyChanged
             player1CpuControlled = value;
             OnPropertyChanged();
         }
+    }
+
+
+
+    public IPlayer GetPlayer1()
+    {
+        player1ConfigVisible = true;
+
+        throw new NotImplementedException();
+
+        Player1ConfigVisible = false;
     }
     
     

@@ -137,7 +137,7 @@
             </Grid>
             
             <!-- Player 1 config window -->
-            <Grid Visibility="{Binding Player1ConfigVisible, Converter={StaticResource BoolToVis}}">
+            <Grid Visibility="{Binding PlayerConfig.Player1ConfigVisible, Converter={StaticResource BoolToVis}}">
                 <Image 
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"

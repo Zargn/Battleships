@@ -15,14 +15,14 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
     {
         game = new Game(this);
         PlayerConfig = new PlayerConfig();
+        game.Run();
     }
     
     private Game game;
     
     private bool playerFieldClickable;
     private bool enemyFieldClickable;
-    private bool player1ConfigVisible = true;
-    private bool player2ConfigVisible;
+
 
 
     public PlayerConfig PlayerConfig { get; set; }
@@ -48,33 +48,12 @@ public class GameWindowViewModel : IUserInterface, INotifyPropertyChanged
         }
     }
 
-    public bool Player1ConfigVisible
-    {
-        get => player1ConfigVisible;
-        set
-        {
-            player1ConfigVisible = value;
-            OnPropertyChanged();
-        }
-    }
-    
-    public bool Player2ConfigVisible
-    {
-        get => player2ConfigVisible;
-        set
-        {
-            player2ConfigVisible = value;
-            OnPropertyChanged();
-        }
-    }
-    
-    
-    
-    
-    
+
+
+
     public IPlayer GetPlayer1()
     {
-        throw new System.NotImplementedException();
+        return PlayerConfig.GetPlayer1();
     }
 
     public IPlayer GetPlayer2()
