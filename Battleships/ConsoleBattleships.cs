@@ -13,7 +13,7 @@ public class ConsoleBattleships
         {
             await game.Run();
         
-            if (!userInterface.GetYesNoAnswer("Play again?", CancellationToken.None))
+            if (! await userInterface.GetYesNoAnswer("Play again?", CancellationToken.None))
             {
                 break;
             }

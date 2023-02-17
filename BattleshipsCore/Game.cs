@@ -53,11 +53,11 @@ public class Game
     {
         CancellationTokenSource initializationCancelSource = new CancellationTokenSource();
         
-        var player1 = userInterface.GetPlayer1();
+        var player1 = await userInterface.GetPlayer1();
         await player1.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token);
         player1.PlayerUnavailable += Stop;
 
-        var player2 = userInterface.GetPlayer2();
+        var player2 = await userInterface.GetPlayer2();
         await player2.InitializePlayer(ShipLengths, ArenaSizeX, ArenaSizeY, initializationCancelSource.Token);
         player2.PlayerUnavailable += Stop;
 

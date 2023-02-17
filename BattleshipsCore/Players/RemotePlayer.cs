@@ -82,7 +82,7 @@ public class RemotePlayer : IPlayer
         
         ConfigurePackageHandlers();
 
-        if (userInterface.GetYesNoAnswer("Do you want to join a existing group?", cancellationToken))
+        if (await userInterface.GetYesNoAnswer("Do you want to join a existing group?", cancellationToken))
         {
             await JoinMode(cancellationToken);
             PlayerStartPriority = StartingPlayer.Yes;
@@ -113,7 +113,7 @@ public class RemotePlayer : IPlayer
 
             client = new FwClient(logger, serializer, identificationPackage);
 
-            var ip = userInterface.GetIpAddress(cancellationToken);
+            var ip = await userInterface.GetIpAddress(cancellationToken);
 
             success = await client.ConnectAsync(ip, 25564);
         }
@@ -144,7 +144,7 @@ public class RemotePlayer : IPlayer
     {
         while (true)
         {
-            var targetCode = userInterface.GetTargetGroupCode(cancellationToken);
+            var targetCode = await userInterface.GetTargetGroupCode(cancellationToken);
 
             if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();

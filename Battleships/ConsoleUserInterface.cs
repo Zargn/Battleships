@@ -12,9 +12,9 @@ public class ConsoleUserInterface : IUserInterface
 {
     private IPlayer player1;
     
-    public IPlayer GetPlayer1()
+    public async Task<IPlayer> GetPlayer1()
     {
-        if (GetYesNoAnswer("Do you want to control your player?", CancellationToken.None))
+        if (await GetYesNoAnswer("Do you want to control your player?", CancellationToken.None))
         {
             player1 = new LocalPlayer(this);
         }
@@ -26,9 +26,9 @@ public class ConsoleUserInterface : IUserInterface
         return player1;
     }
 
-    public IPlayer GetPlayer2()
+    public async Task<IPlayer> GetPlayer2()
     {
-        if (GetYesNoAnswer("Do you want to play multiplayer?", CancellationToken.None))
+        if (await GetYesNoAnswer("Do you want to play multiplayer?", CancellationToken.None))
         {
             return new RemotePlayer(this, player1, new ConsoleLogger(), new JsonSerializerAdapter());
         }
@@ -77,13 +77,13 @@ public class ConsoleUserInterface : IUserInterface
         Console.WriteLine(sb);
     }
 
-    public string GetUsername()
+    public Task<string> GetUsername()
     {
         Console.WriteLine("Please enter username: ");
-        return Console.ReadLine();
+        return Task.FromResult(Console.ReadLine());
     }
 
-    public bool GetYesNoAnswer(string question, CancellationToken cancellationToken)
+    public Task<bool> GetYesNoAnswer(string question, CancellationToken cancellationToken)
     {
         while (true)
         {
@@ -95,21 +95,21 @@ public class ConsoleUserInterface : IUserInterface
 
             if (response.ToLower().StartsWith("y"))
             {
-                return true;
+                return Task.FromResult(true);
             }
             else if (response.ToLower().StartsWith("n"))
             {
-                return false;
+                return Task.FromResult(false);
             }
 
             Console.WriteLine("Invalid input. [Y]es and [N]o allowed.");
         }
     }
 
-    public ShipPlacementInformation GetShipPlacementInformation(int shipLength, CancellationToken cancellationToken)
+    public async Task<ShipPlacementInformation> GetShipPlacementInformation(int shipLength, CancellationToken cancellationToken)
     {
         Console.WriteLine($"Please enter location for ship of length: {shipLength}");
-        var coordinates = GetTargetCoordinates(cancellationToken);
+        var coordinates = await GetTargetCoordinates(cancellationToken);
 
         if (cancellationToken.IsCancellationRequested)
             throw new OperationCanceledException();
@@ -134,7 +134,7 @@ public class ConsoleUserInterface : IUserInterface
     }
 
     // TODO: Add string message argument?
-    public TargetCoordinates GetTargetCoordinates(CancellationToken cancellationToken)
+    public Task<TargetCoordinates> GetTargetCoordinates(CancellationToken cancellationToken)
     {
         Console.WriteLine("Please enter target coordinates: (Xvalue Yvalue)");
         while (true)
@@ -144,7 +144,7 @@ public class ConsoleUserInterface : IUserInterface
             
             try
             {
-                return TargetCoordinates.FromString(Console.ReadLine());
+                return Task.FromResult(TargetCoordinates.FromString(Console.ReadLine()));
             }
             catch (FormatException)
             {
@@ -153,16 +153,16 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    public IPAddress GetIpAddress(CancellationToken cancellationToken)
+    public Task<IPAddress> GetIpAddress(CancellationToken cancellationToken)
     {
         // return IPAddress.Parse("192.168.1.228");
-        return IPAddress.Parse("127.0.0.1");
+        return Task.FromResult(IPAddress.Parse("127.0.0.1"));
         Console.WriteLine("Please enter server ip address: (0-255.0-255.0-255.0-255)");
         while (true)
         {
             try
             {
-                return IPAddress.Parse(Console.ReadLine());
+                return Task.FromResult(IPAddress.Parse(Console.ReadLine()));
             }
             catch (FormatException)
             {
@@ -202,7 +202,7 @@ public class ConsoleUserInterface : IUserInterface
         }
     }
 
-    public string GetTargetGroupCode(CancellationToken cancellationToken)
+    public Task<string> GetTargetGroupCode(CancellationToken cancellationToken)
     {
         Console.WriteLine("Please enter group code to join: ");
         while (true)
@@ -212,7 +212,7 @@ public class ConsoleUserInterface : IUserInterface
             
             var input = Console.ReadLine();
             if (input.ToUpper().Length == 5)
-                return input;
+                return Task.FromResult(input);
             Console.WriteLine("Invalid code length. Please enter 5 characters only.");
         }
     }

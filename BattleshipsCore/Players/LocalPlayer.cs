@@ -29,9 +29,9 @@ public class LocalPlayer : IPlayer
 
     public async Task InitializePlayer(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
-        UserName = userInterface.GetUsername();
+        UserName = await userInterface.GetUsername();
 
-        if (userInterface.GetYesNoAnswer("Do you want to place your ships manually?", cancellationToken))
+        if (await userInterface.GetYesNoAnswer("Do you want to place your ships manually?", cancellationToken))
         {
             PlaceShipsManual(shipLengths, xSize, ySize, cancellationToken);
         }
@@ -63,11 +63,11 @@ public class LocalPlayer : IPlayer
         }
     }
 
-    private void PlaceShip(int shipLength, CancellationToken cancellationToken)
+    private async Task PlaceShip(int shipLength, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var placementInformation = userInterface.GetShipPlacementInformation(shipLength, cancellationToken);
+            var placementInformation = await userInterface.GetShipPlacementInformation(shipLength, cancellationToken);
             var ship = new Ship(shipLength, placementInformation.Name);
             try
             {
@@ -82,7 +82,7 @@ public class LocalPlayer : IPlayer
         }
     }
 
-    private void PlaceShipsAuto(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
+    private async Task PlaceShipsAuto(int[] shipLengths, int xSize, int ySize, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -90,7 +90,7 @@ public class LocalPlayer : IPlayer
             var tiles = arena.RandomiseShipLocations(shipLengths);
             
             userInterface.DrawTiles(tiles, UserName);
-            if (!userInterface.GetYesNoAnswer("Randomise again?", cancellationToken))
+            if (! await userInterface.GetYesNoAnswer("Randomise again?", cancellationToken))
                 return;
         }
     }
@@ -99,7 +99,7 @@ public class LocalPlayer : IPlayer
 
     public async Task<TurnResult> PlayTurnAsync(IPlayer target, CancellationToken cancellationToken)
     {
-        var firingTarget = GetFiringTarget(target.KnownArenaTiles, cancellationToken);
+        var firingTarget = await GetFiringTarget(target.KnownArenaTiles, cancellationToken);
         
         var hitResult = await target.HitTile(firingTarget, cancellationToken);
 
@@ -108,11 +108,11 @@ public class LocalPlayer : IPlayer
         return turnResult;
     }
     
-    private TargetCoordinates GetFiringTarget(Tile[,] enemyTiles, CancellationToken cancellationToken)
+    private async Task<TargetCoordinates> GetFiringTarget(Tile[,] enemyTiles, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var target = userInterface.GetTargetCoordinates(cancellationToken);
+            var target = await userInterface.GetTargetCoordinates(cancellationToken);
             if (enemyTiles.GetLength(0) <= target.X || enemyTiles.GetLength(1) <= target.Y)
             {
                 userInterface.DisplayError("Target was out of bounds. Try again.");
